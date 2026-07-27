@@ -202,7 +202,18 @@ button.chip.ai:active{background:#7A3FA8;color:#fff}
 .progress .fill{height:100%;background:var(--heat-ok);border-radius:4px;width:0;transition:width .3s}
 .storage-note{font-size:.78rem;color:var(--ink-soft);margin-top:10px;text-align:center}
 
-.addbox{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.addbox{display:none;flex-direction:column;gap:8px;margin-top:10px}
+.addbox.open{display:flex}
+.fab{
+  position:fixed;z-index:30;inset-inline-end:14px;
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  width:54px;height:54px;border-radius:50%;
+  background:var(--metro);color:#fff;border:3px solid #fff;
+  font-size:1.9rem;line-height:1;display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(11,46,107,.35);cursor:pointer;
+}
+.fab.show{display:flex}
+.fab:active{background:var(--metro-deep)}
 .addbox input{
   font-family:"Assistant",sans-serif;font-size:.95rem;color:var(--ink);
   background:var(--paper);border:1.5px solid var(--line);border-radius:10px;
@@ -326,7 +337,11 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <section class="panel" id="panel-places">
   <div class="infocard">
     <h3><span class="navsvg"></span>המקומות שלנו</h3>
-    <p>הרשימה של מירית, כל המקומות מהלו״ז, וכל מה שתוסיפו כאן. לכל מקום: מפה, מסלול מהדירה ו"מצא אותו עכשיו" מהמיקום הנוכחי. שתי שורות סינון — לפי מי שהוסיף ולפי נושא.</p>
+    <p>הרשימה של מירית, המקומות מהלו״ז, מקומות כשרים, וכל מה שתוסיפו (כפתור ה־+ למטה). סינון בשתי שורות — לפי מקור ולפי נושא.</p>
+    <div class="chips">
+      <a data-map="kosher restaurant near me">אתר לי מקומות כשרים לידי</a>
+    </div>
+    <p style="margin-top:8px;font-size:.8rem;color:var(--ink-soft)">🕎 רוב המסעדות הכשרות סגורות משישי אחה״צ עד מוצ״ש — לבדוק תעודת כשרות בכניסה.</p>
     <div class="addbox">
       <input type="text" id="placeName" placeholder="שם המקום (למשל: Berthillon)" maxlength="80">
       <input type="text" id="placeNote" placeholder="הערה (אופציונלי: גלידה מפורסמת, ליד הדירה...)" maxlength="120">
@@ -399,15 +414,37 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   </div>
 
   <div class="infocard">
-    <h3>🎫 מה קונים</h3>
-    <p><b>לא</b> קונים Navigo שבועי — כמעט אין נסיעות בשישי־שבת, כרטיסים בודדים משתלמים וגמישים יותר.</p>
+    <h3>🎫 כרטיסי מטרו — איך זה עובד</h3>
+    <p>כרטיסי הנייר בוטלו. את הכרטיסים טוענים על אחד משניים:</p>
+    <ul>
+      <li><b>כרטיס Navigo Easy</b> (€2 לכרטיס, חד־פעמי לרכישה) — קונים בקופה או במכונה בכל תחנת מטרו, וטוענים עליו כרטיסים כמה שרוצים. צריך <b>כרטיס נפרד לכל נוסע</b> — אי אפשר להעביר אותו בין שני נוסעים באותה נסיעה.</li>
+      <li><b>הטלפון</b> — באפליקציית Île-de-France Mobilités קונים וטוענים כרטיסים ישירות לטלפון, ומצמידים אותו למסוף כמו ארנק דיגיטלי (עובד באנדרואיד ובאייפון).</li>
+    </ul>
+
+    <h4>חד־פעמי — מה שאנחנו קונים ✔</h4>
     <div style="margin-top:8px">
-      <div class="fare"><span>Navigo Easy לכל נוסע (או טעינה בטלפון). אי אפשר להעביר כרטיס בין נוסעים באותה נסיעה.</span><b>€2</b></div>
-      <div class="fare"><span>Metro–Train–RER — תקף גם לוורסאי ול־Stade de France, לא לשדה התעופה</span><b>€2.55</b></div>
-      <div class="fare"><span>Bus–Tram</span><b>€2.05</b></div>
-      <div class="fare"><span>כרטיס Airport נפרד למבוגר (RER B / Roissybus)</span><b>€14</b></div>
+      <div class="fare"><span>Metro–Train–RER — כל נסיעה כולל החלפות, תקף גם לוורסאי ול־Stade de France (לא לשדה התעופה)</span><b>€2.55</b></div>
+      <div class="fare"><span>Bus–Tram — לאוטובוסים וחשמליות בלבד</span><b>€2.05</b></div>
+      <div class="fare"><span>כרטיס Airport נפרד למבוגר (RER B / Roissybus מ־CDG)</span><b>€14</b></div>
     </div>
-    <p style="margin-top:8px">לילד בן 8 ייתכן תעריף מופחת — לשאת הוכחת גיל.</p>
+
+    <h4>יומי — Navigo Jour</h4>
+    <p>נסיעות חופשיות ליום קלנדרי אחד (כ־€12 — לבדוק מחיר עדכני באפליקציה). משתלם רק מ־5 נסיעות מטרו באותו יום — בלו״ז שלנו, שבנוי על הליכה ומעט נסיעות ממוקדות, אין יום כזה.</p>
+
+    <h4>שבועי — Navigo Semaine</h4>
+    <p>נסיעות חופשיות לשבוע קלנדרי <b>שני עד ראשון</b> (כ־€32 + נדרשת תמונת פספורט). אצלנו זה לא מסתדר פעמיים: מגיעים ביום שלישי (מפסידים יומיים מהשבוע), ושבת בלי נסיעות בכלל — נשארים ~4 ימי שימוש עם 1–2 נסיעות ביום. רחוק מלהשתלם.</p>
+
+    <p><b>השורה התחתונה:</b> Navigo Easy לכל נוסע + כרטיסים חד־פעמיים לפי הצורך. גמיש, זול יותר אצלנו, ואין התחייבות.</p>
+    <p>לילד בן 8 ייתכן תעריף מופחת — לשאת הוכחת גיל.</p>
+  </div>
+
+  <div class="infocard">
+    <h3>📱 אפליקציות תחבורה</h3>
+    <ul>
+      <li><b>Île-de-France Mobilités</b> — האפליקציה הרשמית: קנייה וטעינת כרטיסים בטלפון, תכנון מסלולים ועדכוני שיבושים. <a href="https://www.iledefrance-mobilites.fr/en" target="_blank" rel="noopener">iledefrance-mobilites.fr</a> (קישורי ההורדה באתר, או חפשו בחנות האפליקציות)</li>
+      <li><b>Bonjour RATP</b> — אפליקציית מפעילת המטרו: מפות קווים, זמני אמת ומסלולים. <a href="https://www.ratp.fr/en" target="_blank" rel="noopener">ratp.fr</a></li>
+      <li><b>Citymapper</b> — הכי נוחה לניווט בזמן אמת, כולל התראות שיבושים. <a href="https://citymapper.com" target="_blank" rel="noopener">citymapper.com</a></li>
+    </ul>
   </div>
 
   <div class="infocard">
@@ -498,6 +535,7 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
 </main>
 
+<button id="addFab" class="fab" aria-label="הוספת מקום">+</button>
 <nav aria-label="ניווט ראשי">
   <button class="sel" data-panel="days"><span class="ico">🚇</span>לו״ז</button>
   <button data-panel="tickets"><span class="ico">🎟️</span>כרטיסים</button>
@@ -964,7 +1002,8 @@ function allPlaces(){
   const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', tag:p.tag||'', fixed:false}));
   const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', tag:p.tag||'', fixed:true}));
   const trip=TRIP.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מסלול', tag:p.tag||'', fixed:true}));
-  return users.concat(mirit, trip);
+  const kosher=KOSHER.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'כשר', tag:p.tag||'', fixed:true}));
+  return users.concat(mirit, trip, kosher);
 }
 function renderPlaces(){
   const wrap=document.getElementById('myPlacesList');
@@ -1010,7 +1049,7 @@ function renderPlaces(){
   });
   bindAi(wrap);
   document.getElementById('placesEmpty').textContent =
-    myPlaces.length ? 'המקומות שהוספתם נשמרים אוטומטית במכשיר הזה.' : 'אפשר להוסיף מקומות משלכם למעלה — הם יצטרפו לרשימה של מירית.';
+    myPlaces.length ? 'המקומות שהוספתם נשמרים אוטומטית במכשיר הזה.' : 'הוסיפו מקומות משלכם עם כפתור ה־+ הצף למטה.';
 }
 document.getElementById('addPlaceBtn').onclick=()=>{
   const nameEl=document.getElementById('placeName');
@@ -1102,6 +1141,20 @@ const MIRIT=[
  {n:'DAARK³', q:'DAARK coffee Paris', d:'בית קפה · ★ 4.8 · €1–10', tag:'קפה ומתוקים'}
 ];
 
+/* מקומות כשרים — ותיקים ומוכרים + חיפושים חיים לפי אזורי הטיול */
+const KOSHER=[
+ {n:'L\'As du Fallafel', q:'L\'As du Fallafel Paris', d:'הפלאפל המפורסם של רחוב רוזייה במארה — סגור בשבת', tag:'כשר', mode:'transit'},
+ {n:'King Falafel Palace', q:'King Falafel Palace Paris', d:'פלאפל ושווארמה במארה', tag:'כשר', mode:'transit'},
+ {n:'Micky\'s Deli', q:'Micky\'s Deli Paris', d:'בורגר ודלי במארה', tag:'כשר', mode:'transit'},
+ {n:'מאפיית Korcarz', q:'Boulangerie Korcarz Paris', d:'מאפייה כשרה ותיקה ברחוב רוזייה', tag:'כשר', mode:'transit'},
+ {n:'Berbeche Burger', q:'Berbeche Burger Paris', d:'בורגר כשר ותיק ברובע 9', tag:'כשר'},
+ {n:'רחוב Richer — אזור המסעדות הכשרות', q:'kosher restaurant Rue Richer Paris', d:'הריכוז הכשר המרכזי של פריז — ~20 דק׳ הליכה מהדירה או מטרו 8 ל־Grands Boulevards · חיפוש חי', tag:'כשר'},
+ {n:'כשר ליד הדירה (מדלן/אופרה)', q:'kosher restaurant near Madeleine Paris', d:'חיפוש חי סביב הדירה', tag:'כשר'},
+ {n:'כשר ליד שער הניצחון (רובע 17)', q:'kosher restaurant 17th arrondissement Paris', d:'לערב חמישי בשאנז — רובע עם קהילה יהודית גדולה · חיפוש חי', tag:'כשר', mode:'transit'},
+ {n:'כשר במונמרט', q:'kosher restaurant Montmartre Paris', d:'לערבי מונמרט · חיפוש חי', tag:'כשר', mode:'transit'},
+ {n:'כשר בוורסאי', q:'kosher restaurant Versailles France', d:'ליום ראשון בוורסאי · חיפוש חי', tag:'כשר', mode:'transit'}
+];
+
 /* מקומות מתוך הלו״ז היומי (ללא כפילויות עם רשימת מירית) */
 const TRIP=[
  {n:'גני הטווילרי', q:'Jardin des Tuileries Paris', d:'הגנים בין הלובר לקונקורד — קרוסלה וסירות מפרש לילדים', tag:'פארקים'},
@@ -1159,15 +1212,24 @@ document.querySelectorAll('.navsvg').forEach(el=>{
 });
 
 /* ═══════════ ניווט ═══════════ */
+const addFab=document.getElementById('addFab');
 document.querySelectorAll('nav button').forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sel'));
     btn.classList.add('sel');
     document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+    addFab.classList.toggle('show', btn.dataset.panel==='places');
     window.scrollTo({top:0});
   };
 });
+addFab.onclick=()=>{
+  const box=document.querySelector('#panel-places .addbox');
+  if(box.classList.toggle('open')){
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+    document.getElementById('placeName').focus();
+  }
+};
 
 /* ═══════════ אתחול ═══════════ */
 const ti=todayIndex();
