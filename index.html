@@ -315,6 +315,15 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   <p class="storage-note" id="placesEmpty"></p>
 </section>
 
+<!-- ════════ המקומות של מירית ════════ -->
+<section class="panel" id="panel-mirit">
+  <div class="infocard">
+    <h3>📌 המקומות של מירית</h3>
+    <p>הרשימה השמורה מגוגל מפות — לכל מקום קישור למפה ומסלול מהדירה. (הדירה עצמה, 8 Rue de l'Arcade, נמצאת בלשונית תחבורה.)</p>
+  </div>
+  <div id="miritList"></div>
+</section>
+
 <!-- ════════ תחבורה ════════ -->
 <section class="panel" id="panel-transport">
 
@@ -467,6 +476,7 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   <button class="sel" data-panel="days"><span class="ico">🚇</span>לו״ז</button>
   <button data-panel="tickets"><span class="ico">🎟️</span>כרטיסים</button>
   <button data-panel="places"><span class="ico navsvg"></span>מקומות</button>
+  <button data-panel="mirit"><span class="ico">📌</span>מירית</button>
   <button data-panel="transport"><span class="ico">🗺️</span>תחבורה</button>
   <button data-panel="info"><span class="ico">ℹ️</span>מידע</button>
 </nav>
@@ -958,6 +968,47 @@ document.getElementById('placeNote').addEventListener('keydown',e=>{
 document.getElementById('placeName').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();document.getElementById('placeNote').focus();}
 });
+
+/* ═══════════ המקומות של מירית ═══════════ */
+/* רשימה קבועה מתוך השמורים של מירית בגוגל מפות. mode:'transit' למקומות רחוקים מדי להליכה. */
+const MIRIT=[
+ {n:'107 Rue de Rivoli', q:'107 Rue de Rivoli, 75001 Paris', d:'כתובת שמורה — רובע 1, ליד הלובר'},
+ {n:'Merci', q:'Merci concept store Paris', d:'קונספט־סטור במארה · ★ 4.1'},
+ {n:'Fromagerie Laurent Dubois', q:'Fromagerie Laurent Dubois Paris', d:'חנות גבינות · ★ 4.5'},
+ {n:'Jade Genin', q:'Jade Genin chocolat Paris', d:'שוקולד בעבודת יד · ★ 4.6 · €10–50'},
+ {n:'PLAQ Chocolat', q:'PLAQ Chocolat Paris', d:'חנות שוקולד · ★ 4.5'},
+ {n:'Mamiche', q:'Mamiche boulangerie Paris', d:'מאפייה · ★ 4.6 · €1–10 · שני סניפים — המפה תציג את הקרוב'},
+ {n:'Brigat\'', q:'Brigat\' patisserie Paris', d:'פטיסרי · ★ 4.7'},
+ {n:'מוזיאון המדע והתעשייה', q:'Cité des Sciences et de l\'Industrie Paris', d:'מוזיאון מדע · ★ 3.8 · פארק לה־וילט', mode:'transit'},
+ {n:'Carrefour City', q:'Carrefour City Madeleine Paris', d:'סופרמרקט · ★ 4.2'},
+ {n:'Monoprix', q:'Monoprix 47 Boulevard Malesherbes Paris', d:'סופרמרקט · הסניף של קניות שישי (47 Bd Malesherbes)'},
+ {n:'פאלה רויאל', q:'Palais Royal Paris', d:'ציון דרך תרבותי · ★ 4.6 · גנים ועמודים מפוספסים'},
+ {n:'Papier Tigre', q:'Papier Tigre Paris', d:'חנות מכשירי כתיבה · ★ 4.6'},
+ {n:'Café Verlet', q:'Café Verlet Paris', d:'בית קפה · ★ 4.3 · €10–20'},
+ {n:'Noir Coffee Shop – Madeleine', q:'Noir Coffee Shop Madeleine Paris', d:'בית קפה · ★ 4.5 · €1–10 · ממש ליד הדירה'},
+ {n:'מונמארטר', q:'Montmartre Paris', d:'השכונה — מתוכננת כערב בלו״ז', mode:'transit'},
+ {n:'Cedric Grolet Opéra', q:'Cedric Grolet Opéra Paris', d:'מאפים · ★ 3.4'},
+ {n:'Fleux', q:'Fleux Paris', d:'חנות הכל לבית · ★ 4.0'},
+ {n:'18 Rue Tiquetonne', q:'18 Rue Tiquetonne, 75002 Paris', d:'כתובת שמורה — רובע 2'},
+ {n:'Uniqlo', q:'Uniqlo Paris', d:'חנות בגדים · ★ 4.1'},
+ {n:'Fellows Faubourg St-Denis', q:'Fellows Faubourg Saint-Denis Paris', d:'מסעדה צמחונית · ★ 4.9 · €10–20'},
+ {n:'גלריית איבון למבר', q:'Librairie Yvon Lambert Paris', d:'חנות ספרים וגלריה · ★ 4.8'},
+ {n:'DAARK³', q:'DAARK coffee Paris', d:'בית קפה · ★ 4.8 · €1–10'}
+];
+function renderMirit(){
+  document.getElementById('miritList').innerHTML = MIRIT.map(p=>`
+    <div class="placecard">
+      <div class="txt">
+        <h3>${esc(p.n)}</h3>
+        <p>${esc(p.d)}</p>
+        <div class="chips">
+          <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
+          <a class="chip map" href="${GDIR(HOME,p.q,p.mode||'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
+        </div>
+      </div>
+    </div>`).join('');
+}
+renderMirit();
 
 /* ═══════════ קישור מסמכים ═══════════ */
 const DEFAULT_DOCS = 'https://drive.google.com/drive/folders/1j8_bdjBuxLwMTWlbwlRLEPDRkpplpnXB?usp=drive_link';
