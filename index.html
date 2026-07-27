@@ -223,6 +223,8 @@ button.chip.ai:active{background:#7A3FA8;color:#fff}
 .placecard h3{font-size:.98rem}
 .placecard p{font-size:.85rem;color:var(--ink-soft);line-height:1.5;margin-top:3px}
 .placecard .chips{margin-top:8px}
+.placecard .byline{display:inline-block;font-size:.7rem;font-weight:700;border-radius:6px;padding:1px 8px;background:#EEF1F5;color:var(--ink-soft);margin-inline-start:6px;vertical-align:2px}
+.filterrow{display:flex;gap:8px;flex-wrap:wrap;margin:0 2px 12px}
 .delbtn{
   flex:0 0 auto;background:none;border:1.5px solid var(--line);border-radius:8px;
   width:30px;height:30px;color:var(--ink-soft);cursor:pointer;font-size:.9rem;line-height:1;
@@ -317,25 +319,18 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <!-- ════════ המקומות שלי ════════ -->
 <section class="panel" id="panel-places">
   <div class="infocard">
-    <h3><span class="navsvg"></span>המקומות שלי</h3>
-    <p>הוסיפו כאן מקומות ששמרתם בגוגל מפות או שקיבלתם כהמלצה. לכל מקום ייווצרו אוטומטית קישור מפה ומסלול הליכה מהדירה.</p>
+    <h3><span class="navsvg"></span>המקומות שלנו</h3>
+    <p>הרשימה של מירית מגוגל מפות + כל מה שתוסיפו כאן. לכל מקום: מפה, מסלול מהדירה ו"מצא אותו עכשיו" מהמיקום הנוכחי. אפשר לסנן לפי מי שהוסיף.</p>
     <div class="addbox">
       <input type="text" id="placeName" placeholder="שם המקום (למשל: Berthillon)" maxlength="80">
       <input type="text" id="placeNote" placeholder="הערה (אופציונלי: גלידה מפורסמת, ליד הדירה...)" maxlength="120">
+      <input type="text" id="placeBy" placeholder="מי מוסיף? (למשל: יריב)" maxlength="30">
       <button id="addPlaceBtn" class="addbtn">+ הוסף מקום</button>
     </div>
   </div>
+  <div class="filterrow" id="placeFilter"></div>
   <div id="myPlacesList"></div>
   <p class="storage-note" id="placesEmpty"></p>
-</section>
-
-<!-- ════════ המקומות של מירית ════════ -->
-<section class="panel" id="panel-mirit">
-  <div class="infocard">
-    <h3>📌 המקומות של מירית</h3>
-    <p>הרשימה השמורה מגוגל מפות — לכל מקום קישור למפה ומסלול מהדירה. (הדירה עצמה, 8 Rue de l'Arcade, נמצאת בלשונית תחבורה.)</p>
-  </div>
-  <div id="miritList"></div>
 </section>
 
 <!-- ════════ תחבורה ════════ -->
@@ -491,7 +486,6 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   <button data-panel="tickets"><span class="ico">🎟️</span>כרטיסים</button>
   <button data-panel="todos"><span class="ico">📝</span>משימות</button>
   <button data-panel="places"><span class="ico navsvg"></span>מקומות</button>
-  <button data-panel="mirit"><span class="ico">📌</span>מירית</button>
   <button data-panel="transport"><span class="ico">🗺️</span>תחבורה</button>
   <button data-panel="info"><span class="ico">ℹ️</span>מידע</button>
 </nav>
@@ -948,24 +942,38 @@ function placeQuery(name){
 function esc(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+let placeFilter='הכל';
+function allPlaces(){
+  const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', fixed:false}));
+  const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', fixed:true}));
+  return users.concat(mirit);
+}
 function renderPlaces(){
   const wrap=document.getElementById('myPlacesList');
+  const all=allPlaces();
+  const names=[...new Set(all.map(p=>p.by).filter(Boolean))];
+  if(placeFilter!=='הכל' && !names.includes(placeFilter)) placeFilter='הכל';
+  const frow=document.getElementById('placeFilter');
+  frow.innerHTML=['הכל',...names].map(n=>
+    `<button type="button" class="daychip${placeFilter===n?' sel':''}" data-f="${esc(n)}">${esc(n)}</button>`).join('');
+  frow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ placeFilter=b.dataset.f; renderPlaces(); }; });
+  const list = placeFilter==='הכל' ? all : all.filter(p=>p.by===placeFilter);
   wrap.innerHTML='';
-  myPlaces.forEach(p=>{
-    const q=placeQuery(p.name);
+  list.forEach(p=>{
     const el=document.createElement('div');
     el.className='placecard';
     el.innerHTML=`
       <div class="txt">
-        <h3>${esc(p.name)}</h3>
+        <h3>${esc(p.name)}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}</h3>
         ${p.note?`<p>${esc(p.note)}</p>`:''}
         <div class="chips">
-          <a class="chip map" href="${G(q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
-          <a class="chip map" href="${GDIR(HOME,q,'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
+          <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
+          <a class="chip map" href="${GDIR(HOME,p.q,p.mode)}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
+          <a class="chip map" href="${GDIRNOW(p.q,p.mode)}" target="_blank" rel="noopener">📍 מצא אותו עכשיו</a>
           <button type="button" class="chip ai" data-ai="${esc(p.name)}">${I_AI} תעלומה בזמן</button>
         </div>
       </div>
-      <button class="delbtn" aria-label="מחיקת ${esc(p.name)}" data-del="${p.id}">✕</button>`;
+      ${p.fixed?'':`<button class="delbtn" aria-label="מחיקת ${esc(p.name)}" data-del="${p.id}">✕</button>`}`;
     wrap.appendChild(el);
   });
   wrap.querySelectorAll('.delbtn').forEach(b=>{
@@ -976,18 +984,22 @@ function renderPlaces(){
   });
   bindAi(wrap);
   document.getElementById('placesEmpty').textContent =
-    myPlaces.length ? 'המקומות נשמרים אוטומטית במכשיר הזה.' : 'עדיין אין מקומות — הוסיפו את הראשון למעלה.';
+    myPlaces.length ? 'המקומות שהוספתם נשמרים אוטומטית במכשיר הזה.' : 'אפשר להוסיף מקומות משלכם למעלה — הם יצטרפו לרשימה של מירית.';
 }
 document.getElementById('addPlaceBtn').onclick=()=>{
   const nameEl=document.getElementById('placeName');
   const noteEl=document.getElementById('placeNote');
+  const byEl=document.getElementById('placeBy');
   const name=nameEl.value.trim();
   if(!name) { nameEl.focus(); return; }
-  myPlaces.push({id:Date.now(), name, note:noteEl.value.trim()});
+  myPlaces.push({id:Date.now(), name, note:noteEl.value.trim(), by:byEl.value.trim()});
   nameEl.value=''; noteEl.value=''; nameEl.focus();
   sSet(PKEY, JSON.stringify(myPlaces)); renderPlaces();
 };
 document.getElementById('placeNote').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('placeBy').focus();}
+});
+document.getElementById('placeBy').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();document.getElementById('addPlaceBtn').click();}
 });
 document.getElementById('placeName').addEventListener('keydown',e=>{
@@ -1062,21 +1074,6 @@ const MIRIT=[
  {n:'גלריית איבון למבר', q:'Librairie Yvon Lambert Paris', d:'חנות ספרים וגלריה · ★ 4.8'},
  {n:'DAARK³', q:'DAARK coffee Paris', d:'בית קפה · ★ 4.8 · €1–10'}
 ];
-function renderMirit(){
-  document.getElementById('miritList').innerHTML = MIRIT.map(p=>`
-    <div class="placecard">
-      <div class="txt">
-        <h3>${esc(p.n)}</h3>
-        <p>${esc(p.d)}</p>
-        <div class="chips">
-          <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
-          <a class="chip map" href="${GDIR(HOME,p.q,p.mode||'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
-          <a class="chip map" href="${GDIRNOW(p.q,p.mode||'walking')}" target="_blank" rel="noopener">📍 מצא אותו עכשיו</a>
-        </div>
-      </div>
-    </div>`).join('');
-}
-renderMirit();
 
 /* ═══════════ קישור מסמכים ═══════════ */
 const DEFAULT_DOCS = 'https://drive.google.com/drive/folders/1j8_bdjBuxLwMTWlbwlRLEPDRkpplpnXB?usp=drive_link';
