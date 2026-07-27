@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B2E6B">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>פריז 2026 · לו״ז משפחתי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Secular+One&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --metro:#0B2E6B;
+  --metro-deep:#071F4A;
+  --paper:#F2F4F1;
+  --card:#FFFFFF;
+  --ink:#1A2233;
+  --ink-soft:#5A6478;
+  --line:#D8DCE2;
+  --heat-ok:#2E8B57;
+  --heat-warm:#E08A00;
+  --heat-hot:#D6491F;
+  --heat-extreme:#B01B1B;
+  --l1:#FFCE00; --l7:#FA9ABA; --l8:#CEADD2; --l12:#007852; --l13:#99D4DE; --l14:#62259D;
+  --rerb:#4B92DB; --rerc:#F0B600; --rerd:#008B5A;
+  --bus:#0064B0; --tl:#7584BC;
+  --walk:#8A93A5; --taxi:#2B2F3A;
+  --radius:14px;
+  font-size:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Assistant",-apple-system,"Segoe UI",Arial,sans-serif;
+  background:var(--paper); color:var(--ink);
+  padding-bottom:76px;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:"Secular One","Assistant",sans-serif;font-weight:400}
+
+header{
+  background:var(--metro);
+  color:#fff;
+  padding:20px 18px 14px;
+  border-bottom:5px solid var(--metro-deep);
+}
+.sign{display:flex;align-items:center;gap:12px;max-width:640px;margin:0 auto}
+.sign .m{
+  width:44px;height:44px;border-radius:50%;
+  background:#fff;color:var(--metro);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Secular One",sans-serif;font-size:1.35rem;flex:0 0 auto;
+  border:3px solid var(--metro-deep);
+}
+.sign h1{font-size:1.45rem;line-height:1.15}
+.sign .sub{font-size:.83rem;opacity:.82;margin-top:2px}
+.today-banner{
+  max-width:640px;margin:12px auto 0;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:10px;padding:8px 12px;
+  font-size:.9rem;display:none;
+}
+.today-banner.show{display:block}
+
+main{max-width:640px;margin:0 auto;padding:16px 14px 32px}
+section.panel{display:none}
+section.panel.active{display:block}
+
+.daybar{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none}
+.daybar::-webkit-scrollbar{display:none}
+.daychip{
+  flex:0 0 auto;cursor:pointer;
+  background:var(--card);border:2px solid var(--line);
+  border-radius:999px;padding:6px 12px 6px 8px;
+  display:flex;align-items:center;gap:8px;
+  font-family:"Assistant",sans-serif;font-weight:600;font-size:.85rem;color:var(--ink);
+  transition:border-color .15s, transform .1s;
+}
+.daychip .dot{
+  width:28px;height:28px;border-radius:50%;
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:"Secular One",sans-serif;font-size:.95rem;
+}
+.daychip.sel{border-color:var(--metro);background:var(--metro);color:#fff}
+.daychip.is-today::after{content:"היום";font-size:.65rem;background:var(--heat-warm);color:#fff;border-radius:6px;padding:1px 6px;margin-inline-start:2px}
+.daychip:active{transform:scale(.96)}
+.dayhint{font-size:.78rem;color:var(--ink-soft);margin:-6px 2px 10px;text-align:center}
+
+.dayhead{
+  background:var(--card);border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;
+  border:1px solid var(--line);
+  border-inline-start:6px solid var(--metro);
+}
+.dayhead .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dayhead h2{font-size:1.2rem;color:var(--metro-deep);line-height:1.3}
+.temp{flex:0 0 auto;text-align:center;color:#fff;border-radius:10px;padding:6px 12px;min-width:64px}
+.temp b{font-family:"Secular One",sans-serif;font-size:1.25rem;display:block;line-height:1}
+.temp span{font-size:.68rem;opacity:.9}
+.dayhead .note{margin-top:10px;font-size:.9rem;color:var(--ink-soft);line-height:1.5}
+
+.timeline{position:relative;padding-inline-start:34px}
+.timeline::before{
+  content:"";position:absolute;top:14px;bottom:14px;inset-inline-start:13px;
+  width:6px;border-radius:3px;background:var(--metro);
+}
+.stop{position:relative;margin-bottom:12px}
+.stop::before{
+  content:"";position:absolute;top:18px;inset-inline-start:-28px;
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;border:4px solid var(--metro);
+}
+.stop.rest::before{background:var(--metro);border-color:#fff;box-shadow:0 0 0 3px var(--metro)}
+.stop.ch::before{background:var(--heat-warm);border-color:#fff;box-shadow:0 0 0 3px var(--heat-warm)}
+.stopcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.stopcard .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.time{font-family:"Secular One",sans-serif;color:var(--metro-deep);font-size:1rem;direction:ltr;unicode-bidi:embed}
+.stopcard h3{font-size:1rem;flex:1;min-width:60%}
+.stopcard p{font-size:.88rem;color:var(--ink-soft);line-height:1.55;margin-top:5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;align-items:center}
+.chip{
+  font-size:.72rem;font-weight:700;border-radius:6px;padding:2px 8px;color:#fff;
+  display:inline-flex;align-items:center;gap:5px;text-decoration:none;
+}
+.chip svg{flex:0 0 auto}
+.chip.l1{background:var(--l1);color:#3a3000}
+.chip.l7{background:var(--l7);color:#5c1130}
+.chip.l8{background:var(--l8);color:#43245c}
+.chip.l12{background:var(--l12)}
+.chip.l13{background:var(--l13);color:#12444d}
+.chip.l14{background:var(--l14)}
+.chip.rerb{background:var(--rerb)}
+.chip.rerc{background:var(--rerc);color:#3a2c00}
+.chip.rerd{background:var(--rerd)}
+.chip.bus{background:var(--bus)}
+.chip.tl{background:var(--tl)}
+.chip.walk{background:var(--walk)}
+.chip.taxi{background:var(--taxi)}
+.chip.free{background:#E7EFE9;color:var(--heat-ok);border:1px solid var(--heat-ok)}
+.chip.tix{background:#FBEFE3;color:#9A5B00;border:1px solid #E0A94F}
+.chip.book{background:#F3E9F8;color:var(--l14);border:1px solid var(--l14)}
+a.chip.map{background:#fff;color:var(--metro);border:1.5px solid var(--metro);padding:3px 9px}
+a.chip.map:active{background:var(--metro);color:#fff}
+button.chip.ai{background:#fff;color:#7A3FA8;border:1.5px solid #B07CD8;padding:3px 9px;font-family:"Assistant",sans-serif;font-size:.72rem;cursor:pointer}
+button.chip.ai:active{background:#7A3FA8;color:#fff}
+
+.choicehead{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.72rem;font-weight:700;color:#fff;background:var(--heat-warm);
+  border-radius:6px;padding:2px 9px;
+}
+.optwrap{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.optcard{
+  border:2px solid var(--line);border-radius:11px;padding:10px 12px;
+  cursor:pointer;user-select:none;position:relative;
+  transition:border-color .15s, background .15s;
+}
+.optcard h4{font-size:.95rem;font-family:"Secular One",sans-serif;color:var(--ink)}
+.optcard p{font-size:.85rem;color:var(--ink-soft);line-height:1.5;margin-top:4px}
+.optcard.chosen{border-color:var(--heat-ok);background:#F3FAF5}
+.optcard.chosen::after{
+  content:"✓ נבחר";position:absolute;top:10px;inset-inline-end:10px;
+  font-size:.68rem;font-weight:700;color:#fff;background:var(--heat-ok);
+  border-radius:6px;padding:1px 7px;
+}
+.optcard.dim{opacity:.55}
+.ordiv{text-align:center;font-size:.75rem;font-weight:700;color:var(--ink-soft)}
+
+.alert{
+  margin-top:9px;background:#FFF6ED;border:1px solid #F0C48A;border-radius:10px;
+  padding:8px 10px;font-size:.84rem;color:#7A4A00;line-height:1.5;
+}
+.alert.fix{background:#EDF4FF;border-color:#9DBCE8;color:#1E4E8C}
+
+.checkcard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;
+  cursor:pointer;user-select:none;transition:opacity .15s;
+}
+.checkcard .box{
+  flex:0 0 auto;width:26px;height:26px;border-radius:8px;margin-top:2px;
+  border:2px solid var(--metro);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;transition:background .15s;
+}
+.checkcard.done .box{background:var(--heat-ok);border-color:var(--heat-ok)}
+.checkcard.done .txt h3{text-decoration:line-through;color:var(--ink-soft)}
+.checkcard .txt{flex:1}
+.checkcard .txt h3{font-size:.98rem}
+.checkcard .txt p{font-size:.85rem;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.checkcard .links{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;border-radius:6px;padding:1px 8px;margin-top:6px}
+.badge.have{background:#E7EFE9;color:var(--heat-ok)}
+.badge.buy{background:#FDECEC;color:var(--heat-extreme)}
+.badge.opt{background:#EEF1F5;color:var(--ink-soft)}
+.progress{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:14px;font-size:.9rem}
+.progress .bar{height:8px;background:var(--paper);border-radius:4px;margin-top:8px;overflow:hidden}
+.progress .fill{height:100%;background:var(--heat-ok);border-radius:4px;width:0;transition:width .3s}
+.storage-note{font-size:.78rem;color:var(--ink-soft);margin-top:10px;text-align:center}
+
+.addbox{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.addbox input{
+  font-family:"Assistant",sans-serif;font-size:.95rem;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:10px;
+  padding:10px 12px;width:100%;
+}
+.addbox input:focus{outline:2px solid var(--metro);outline-offset:1px;border-color:var(--metro)}
+.addbtn{
+  font-family:"Assistant",sans-serif;font-weight:700;font-size:.95rem;
+  background:var(--metro);color:#fff;border:none;border-radius:10px;
+  padding:11px;cursor:pointer;
+}
+.addbtn:active{background:var(--metro-deep)}
+.placecard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;
+}
+.placecard .txt{flex:1}
+.placecard h3{font-size:.98rem}
+.placecard p{font-size:.85rem;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.placecard .chips{margin-top:8px}
+.delbtn{
+  flex:0 0 auto;background:none;border:1.5px solid var(--line);border-radius:8px;
+  width:30px;height:30px;color:var(--ink-soft);cursor:pointer;font-size:.9rem;line-height:1;
+}
+.delbtn:active{border-color:var(--heat-extreme);color:var(--heat-extreme)}
+
+.infocard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px;margin-bottom:12px}
+.infocard h3{font-size:1.02rem;color:var(--metro-deep);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.infocard h4{font-size:.94rem;color:var(--metro-deep);margin:12px 0 4px}
+.infocard p, .infocard li{font-size:.9rem;line-height:1.6;color:var(--ink)}
+.infocard ul, .infocard ol{padding-inline-start:18px;margin-top:4px}
+.infocard li{margin-bottom:6px}
+.infocard a{color:var(--metro);font-weight:600;word-break:break-word}
+.infocard .chips{margin-top:8px}
+.flightrow{
+  display:flex;align-items:center;gap:10px;background:var(--paper);
+  border-radius:10px;padding:10px 12px;margin-top:8px;
+}
+.flightrow .times{font-family:"Secular One",sans-serif;font-size:1.05rem;color:var(--metro-deep);direction:ltr;unicode-bidi:embed;flex:0 0 auto}
+.flightrow .det{font-size:.85rem;color:var(--ink-soft);line-height:1.45}
+.fare{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px dashed var(--line);padding:8px 0;font-size:.9rem}
+.fare:last-child{border-bottom:none}
+.fare b{direction:ltr;unicode-bidi:embed;font-family:"Secular One",sans-serif;color:var(--metro-deep);flex:0 0 auto}
+
+nav{
+  position:fixed;bottom:0;inset-inline:0;z-index:20;
+  background:var(--metro);border-top:4px solid var(--metro-deep);
+  display:flex;justify-content:space-around;
+  padding:6px 2px calc(6px + env(safe-area-inset-bottom));
+}
+nav button{
+  background:none;border:none;color:#B9C6E2;cursor:pointer;
+  font-family:"Assistant",sans-serif;font-weight:600;font-size:.72rem;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:5px 9px;border-radius:10px;
+}
+nav button .ico{font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;height:18px}
+nav button.sel{color:#fff;background:rgba(255,255,255,.13)}
+nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.daychip:focus-visible,.checkcard:focus-visible,.optcard:focus-visible{outline:2px solid var(--metro);outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+@media (min-width:560px){.sign h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sign">
+    <div class="m">P</div>
+    <div>
+      <h1>פריז 2026</h1>
+      <div class="sub">27 ביולי – 4 באוגוסט · 2 מבוגרים + ילדים 8 ו־11 · דירה: 8 Rue de l'Arcade, מדלן (רובע 8)</div>
+    </div>
+  </div>
+  <div class="today-banner" id="todayBanner"></div>
+</header>
+
+<main>
+
+<!-- ════════ לו״ז ════════ -->
+<section class="panel active" id="panel-days">
+  <div class="daybar" id="daybar" role="tablist" aria-label="ימי הטיול"></div>
+  <div class="dayhint">← גללו את הימים · הקישו על אפשרות כדי לקבע בחירה · ✦ ״תעלומה בזמן״ מעתיק פרומפט מוכן ל־AI →</div>
+  <div id="dayContent"></div>
+</section>
+
+<!-- ════════ כרטיסים ════════ -->
+<section class="panel" id="panel-tickets">
+  <div class="progress" id="progressBox">
+    <span id="progressText">טוען…</span>
+    <div class="bar"><div class="fill" id="progressFill"></div></div>
+  </div>
+  <div id="checklist"></div>
+  <p class="storage-note" id="storageNote"></p>
+</section>
+
+<!-- ════════ המקומות שלי ════════ -->
+<section class="panel" id="panel-places">
+  <div class="infocard">
+    <h3><span class="navsvg"></span>המקומות שלי</h3>
+    <p>הוסיפו כאן מקומות ששמרתם בגוגל מפות או שקיבלתם כהמלצה. לכל מקום ייווצרו אוטומטית קישור מפה ומסלול הליכה מהדירה.</p>
+    <div class="addbox">
+      <input type="text" id="placeName" placeholder="שם המקום (למשל: Berthillon)" maxlength="80">
+      <input type="text" id="placeNote" placeholder="הערה (אופציונלי: גלידה מפורסמת, ליד הדירה...)" maxlength="120">
+      <button id="addPlaceBtn" class="addbtn">+ הוסף מקום</button>
+    </div>
+  </div>
+  <div id="myPlacesList"></div>
+  <p class="storage-note" id="placesEmpty"></p>
+</section>
+
+<!-- ════════ תחבורה ════════ -->
+<section class="panel" id="panel-transport">
+
+  <div class="infocard">
+    <h3>✈️ מ־CDG לדירה — ביום ההגעה</h3>
+    <p>היעד: <a data-map="8 Rue de l'Arcade, 75008 Paris">8 Rue de l'Arcade, 75008</a> (ליד כנסיית המדלן).</p>
+
+    <h4>אפשרות 1 — Roissybus (הכי פשוטה בתח״צ)</h4>
+    <ol>
+      <li>אוטובוס ייעודי מכל הטרמינלים של CDG ישירות ל־<b>Opéra</b> (רחוב Scribe), ~60–75 דק׳ לפי פקקים. בלי מדרגות ובלי החלפות — נוח עם מזוודות.</li>
+      <li>מהתחנה הסופית <b>~8 דקות הליכה</b> לדירה. מכוסה בכרטיס Airport (€14) — לוודא בעמדה.</li>
+    </ol>
+    <div class="chips">
+      <span class="chip bus">Roissybus</span>
+      <a class="chip map" data-map="Roissybus stop Opéra Rue Scribe Paris">תחנת Opéra</a>
+    </div>
+
+    <h4>אפשרות 2 — RER B + מטרו 14 (המהירה)</h4>
+    <ol>
+      <li><b>RER B</b> מהטרמינל (מ־T2 התחנה בטרמינל; מ־T1 עם ה־CDGVAL החינמי ל־Roissypole) עד <b>Châtelet – Les Halles</b> (~30–35 דק׳).</li>
+      <li>החלפה ל<b>מטרו 14</b> — שתי תחנות עד <b>Madeleine</b>, ומשם 3 דקות הליכה לדירה. כרטיס Airport €14 מכסה את כל המסלול.</li>
+    </ol>
+    <div class="chips">
+      <span class="chip rerb">RER B</span>
+      <span class="chip l14">מטרו 14</span>
+      <a class="chip map" data-route data-dir-from="Charles de Gaulle Airport" data-dir-to="8 Rue de l'Arcade Paris" data-mode="transit">מסלול בתח״צ</a>
+    </div>
+
+    <h4>אפשרות 3 — מונית (הנוחה)</h4>
+    <p>מהתור הרשמי בלבד (שילוט Taxi ביציאה) — לא נהגים שפונים בפנים. לגדה הימנית יש <b>תעריף קבוע</b> — בדקו את הסכום הרשמי בשילוט. ~45–60 דק׳ ישר לדלת.</p>
+    <div class="chips">
+      <a class="chip map" data-route data-dir-from="Charles de Gaulle Airport" data-dir-to="8 Rue de l'Arcade Paris" data-mode="driving">מסלול במונית</a>
+    </div>
+
+    <div class="alert">🚕 אחרי לילה בלי שינה (יציאה 01:30 מהבית), עם מזוודות ושני ילדים — מונית או Roissybus עדיפים בבירור על ה־RER עם ההחלפה ב־Les Halles.</div>
+  </div>
+
+  <div class="infocard">
+    <h3>🚇 התחנות שלכם</h3>
+    <p>מהדירה ברחוב l'Arcade:</p>
+    <ul>
+      <li><b>Madeleine</b> (קווים 8, 12, 14) — כ־3 דקות הליכה. התחנה הביתית. קו 14 ללובר ולשאטלה, קו 8 לכיוון אינווליד והמארה, קו 12 למונמרט. <a data-map="Madeleine metro station Paris">מפה</a></li>
+      <li><b>Saint-Lazare</b> (קווים 3, 12, 13, 14 + רכבות Transilien) — כ־6 דקות. קו 13 לאצטדיון, קו 12 למונמרט, רכבת L לוורסאי Rive Droite. <a data-map="Gare Saint-Lazare Paris">מפה</a></li>
+      <li><b>Auber</b> (RER A) — כ־7 דקות. תחנה אחת בלבד לשער הניצחון! <a data-map="Auber RER station Paris">מפה</a></li>
+      <li>ל־<b>RER C</b> (ורסאי): מטרו 8 מ־Madeleine שתי תחנות ל־<b>Invalides</b> והחלפה שם. <a data-map="Invalides station Paris">מפה</a></li>
+    </ul>
+  </div>
+
+  <div class="infocard">
+    <h3>🎫 מה קונים</h3>
+    <p><b>לא</b> קונים Navigo שבועי — כמעט אין נסיעות בשישי־שבת, כרטיסים בודדים משתלמים וגמישים יותר.</p>
+    <div style="margin-top:8px">
+      <div class="fare"><span>Navigo Easy לכל נוסע (או טעינה בטלפון). אי אפשר להעביר כרטיס בין נוסעים באותה נסיעה.</span><b>€2</b></div>
+      <div class="fare"><span>Metro–Train–RER — תקף גם לוורסאי ול־Stade de France, לא לשדה התעופה</span><b>€2.55</b></div>
+      <div class="fare"><span>Bus–Tram</span><b>€2.05</b></div>
+      <div class="fare"><span>כרטיס Airport נפרד למבוגר (RER B / Roissybus)</span><b>€14</b></div>
+    </div>
+    <p style="margin-top:8px">לילד בן 8 ייתכן תעריף מופחת — לשאת הוכחת גיל.</p>
+  </div>
+
+  <div class="infocard">
+    <h3>🧭 ניווט</h3>
+    <p>לפני כל נסיעה בדקו ב־<a href="https://citymapper.com" target="_blank" rel="noopener">Citymapper</a> — במיוחד עבודות בקו RER C ביום שבת, לפני ורסאי. שימו לב: קו 13 מתפצל — לאצטדיון לוקחים את הסניף לכיוון Saint-Denis-Université.</p>
+  </div>
+</section>
+
+<!-- ════════ מידע ════════ -->
+<section class="panel" id="panel-info">
+
+  <div class="infocard">
+    <h3>✈️ פרטי הטיסות — אל על LY316</h3>
+    <h4>הלוך — שלישי 28.7</h4>
+    <div class="flightrow">
+      <span class="times">05:40 → 09:30</span>
+      <span class="det">נתב״ג ← CDG · יציאה מצור הדסה ב־01:30 בלילה · להיות בשדה עד ~02:40</span>
+    </div>
+    <h4>חזור — שלישי 4.8</h4>
+    <div class="flightrow">
+      <span class="times">17:35 → 22:55</span>
+      <span class="det">CDG ← נתב״ג · יציאה מהדירה ~13:15 · בשדה עד ~14:15 (אל על — תשאול ביטחוני, להקדים)</span>
+    </div>
+    <p style="margin-top:8px">צ׳ק־אין אונליין נפתח 24 שעות לפני כל טיסה. בדקו את הטרמינל ב־CDG בכרטיס/באתר אל על ביום הטיסה.</p>
+  </div>
+
+  <div class="infocard">
+    <h3>🏠 הדירה</h3>
+    <p>8 Rue de l'Arcade, 75008 — צמוד לכנסיית המדלן. מרחקי הליכה: כנסיית המדלן — 2 דק׳; מטרו Madeleine — 3 דק׳; גלרי לפאייט ואופרה גרנייה — 8 דק׳; גני הטווילרי וכיכר הקונקורד — 10–12 דק׳; סן־לזאר — 6 דק׳; מוזיאון גרווין — 15 דק׳.</p>
+    <div class="chips"><a class="chip map" data-map="8 Rue de l'Arcade, 75008 Paris">הדירה במפה</a></div>
+  </div>
+
+  <div class="infocard">
+    <h3>🗂️ מסמכים משפחתיים</h3>
+    <p>תיקיית ה־Drive מוכנה ומוטמעת בכפתור למטה. נשאר לוודא:</p>
+    <ol>
+      <li>להעלות: צילומי דרכונים, כרטיסי LY316, אישורי לובר/ורסאי/שיט/דירה, ביטוח.</li>
+      <li>שיתוף ← המיילים של בני המשפחה (צפייה מספיקה לילדים).</li>
+      <li>בכל מכשיר: התיקייה ← ⋮ ← "הפוך לזמין במצב לא מקוון" — נפתח גם בלי אינטרנט.</li>
+    </ol>
+    <p>הדביקו כאן את קישור התיקייה כדי לפתוח אותה בלחיצה מהאפליקציה:</p>
+    <div class="addbox">
+      <input type="text" id="docsLink" placeholder="https://drive.google.com/..." dir="ltr">
+      <button id="saveDocsBtn" class="addbtn">שמור קישור</button>
+    </div>
+    <div class="chips" id="docsOpenWrap" style="display:none">
+      <a class="chip map" id="docsOpenBtn" target="_blank" rel="noopener">פתיחת תיקיית המסמכים</a>
+    </div>
+    <div class="alert">🔒 דרכונים הם מידע רגיש: אימות דו־שלבי בחשבונות, שיתוף רק עם המשפחה, ולא לשלוח צילומי דרכון בצ׳אטים.</div>
+  </div>
+
+  <div class="infocard">
+    <h3>🛒 קניות לשבת (עד צהרי שישי!)</h3>
+    <p>יש לכם Monoprix <b>גדול</b> (לא Express) במרחק ~6 דקות הליכה:</p>
+    <ul>
+      <li><b>Monoprix — 47 Boulevard Malesherbes</b>. פתוח בשישי עד הערב, אבל לא דוחים — קונים עד 12:00 כמתוכנן. <a data-map="Monoprix 47 Boulevard Malesherbes Paris">מפה</a></li>
+      <li>גיבוי: מעדניות ומרכולים באזור המדלן וסן־לזאר.</li>
+    </ul>
+  </div>
+  <div class="infocard">
+    <h3>👧 ילדים — חינם / מוזל</h3>
+    <p>לובר וורסאי: חינם מתחת ל־18 (ייתכן שנדרש כרטיס־חינם שמזמינים עם שלכם). שער הניצחון (תצפית): קטינים בדרך כלל חינם. אייפל וגרווין: תעריפי ילדים לפי גיל.</p>
+  </div>
+  <div class="infocard">
+    <h3>🌡️ עקרונות גל החום</h3>
+    <ul>
+      <li>יוצאים מוקדם, מנוחה ארוכה במיזוג בשעות 12:30–19:00 בימים החמים.</li>
+      <li>אטרקציה שדילגנו עליה — לא משלימים ביום אחר.</li>
+      <li>מים + כובעים בכל יציאה. לבדוק תחזית שוב כל ערב.</li>
+    </ul>
+  </div>
+  <div class="infocard">
+    <h3>🔗 קישורים</h3>
+    <ul>
+      <li>אל על: <a href="https://www.elal.com" target="_blank" rel="noopener">elal.com</a> (צ׳ק־אין אונליין)</li>
+      <li>מגדל אייפל: <a href="https://www.toureiffel.paris/en" target="_blank" rel="noopener">toureiffel.paris</a> · <a data-map="Eiffel Tower Paris">מפה</a></li>
+      <li>מוזיאון גרווין: <a href="https://www.grevin-paris.com/en" target="_blank" rel="noopener">grevin-paris.com</a> · <a data-map="Musée Grévin Paris">מפה</a></li>
+      <li>שער הניצחון: <a href="https://www.paris-arc-de-triomphe.fr/en" target="_blank" rel="noopener">paris-arc-de-triomphe.fr</a> · <a data-map="Arc de Triomphe Paris">מפה</a></li>
+      <li>לובר: <a href="https://ticket.louvre.fr" target="_blank" rel="noopener">ticket.louvre.fr</a> · <a data-map="Musée du Louvre Paris">מפה</a></li>
+      <li>ורסאי: <a href="https://en.chateauversailles.fr" target="_blank" rel="noopener">en.chateauversailles.fr</a> · <a data-map="Château de Versailles">מפה</a></li>
+      <li>שיט: <a href="https://www.vedettesdupontneuf.com" target="_blank" rel="noopener">vedettesdupontneuf.com</a> · <a data-map="Vedettes du Pont Neuf Paris">מפה</a></li>
+      <li>Stade de France: <a href="https://www.stadefrance.com/en/tour-pass" target="_blank" rel="noopener">stadefrance.com</a> · <a data-map="Stade de France Saint-Denis">מפה</a></li>
+      <li>Paradox Museum: <a href="https://paradoxmuseumparis.com" target="_blank" rel="noopener">paradoxmuseumparis.com</a> · <a data-map="Paradox Museum Paris">מפה</a></li>
+      <li>תחבורה: <a href="https://www.iledefrance-mobilites.fr/en" target="_blank" rel="noopener">iledefrance-mobilites.fr</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<nav aria-label="ניווט ראשי">
+  <button class="sel" data-panel="days"><span class="ico">🚇</span>לו״ז</button>
+  <button data-panel="tickets"><span class="ico">🎟️</span>כרטיסים</button>
+  <button data-panel="places"><span class="ico navsvg"></span>מקומות</button>
+  <button data-panel="transport"><span class="ico">🗺️</span>תחבורה</button>
+  <button data-panel="info"><span class="ico">ℹ️</span>מידע</button>
+</nav>
+
+<script>
+/* ═══════════ אייקוני SVG ═══════════ */
+const I_MAP = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>';
+const I_ROUTE = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.4"/><circle cx="18" cy="5" r="2.4"/><path d="M8 19h6a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h.5"/></svg>';
+const I_TIX = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 0 0 6v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3a2 2 0 0 0 0-6V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg>';
+
+const I_AI = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg>';
+
+/* מאגר רקע לכל אתר — המפתח זהה לשאילתת המפה של התחנה */
+const AIBG = {
+'METRO': {raw:true, t:'נוסעים במטרו של פריז בדרך ליעד הבא', bg:'המטרו של פריז נפתח בשנת 1900 לכבוד היריד העולמי, והיום יש בו כ־300 תחנות — בפריז אף פעם לא רחוקים יותר מכמה דקות מתחנה. הכניסות הירוקות המסולסלות בסגנון אר־נובו עוצבו על ידי האמן הקטור גימאר והפכו לסמל של העיר. מתחת לאדמה מסתתרות גם ״תחנות רפאים״ שנסגרו במלחמת העולם השנייה ולא נפתחו מאז, ובחלק מהקווים הרכבות נוסעות על גלגלי גומי. רכבות ה־RER הן דו־קומתיות. בנו את המשימות סביב מה שרואים בנסיעה: שלטים, אריחים לבנים, שמות תחנות והנוסעים.'},
+'CAFE': {raw:true, t:'יושבים בבית קפה פריזאי ליד הדירה, באזור המדלן', bg:'בית הקפה הוא ״הסלון של פריז״ — כאן ישבו סופרים, ציירים ומהפכנים. הפתעה: הקרואסון בכלל לא נולד בצרפת אלא בווינה, והפריזאים הם ששכללו אותו לגרסה החמאתית המפורסמת. ארוחת בוקר צרפתית היא מתוקה — מאפה ומשקה חם, בלי ביצים וסלט. יש גם כלל סודי: קפה ליד הבר עולה פחות מקפה בשולחן על המדרכה. בנו משימות תצפית מהשולחן: איך המלצרים לבושים, איך פריזאים מחזיקים את הקרואסון, מילות הקסם bonjour ו־merci.'},
+'SHOP': {raw:true, t:'עורכים קניות בסופרמרקט צרפתי ליד הדירה', bg:'סופר צרפתי הוא מוזיאון אוכל: מדף גבינות עם עשרות סוגים (בצרפת מיוצרות מאות!), עמדת לחמים שבה ״בגט מסורתי״ חייב על פי חוק להכיל ארבעה מרכיבים בלבד — קמח, מים, שמרים ומלח — ומקרר יוגורטים באורך של רחוב. כלל נימוס חשוב: אומרים bonjour לקופאית. בנו משימות ציד בין המדפים: למצוא את הגבינה עם השם הכי מצחיק, לספור סוגי בגטים, ולזהות מאכל שאין בישראל.'},
+'FLY': {raw:true, t:'בדרך לשדה התעופה או כבר במטוס, בין ישראל לפריז', bg:'הטיסה מתל אביב לפריז חוצה כ־3,300 ק״מ מעל הים התיכון — בדרך אפשר לפעמים לראות מהחלון איים יווניים, את מגף איטליה ואפילו את פסגות האלפים המושלגות. מטוס נוסעים שוקל כמו עשרות פילים ובכל זאת עף, בזכות צורת הכנף. בקצה השני מחכה צרפת: ״המשושה״ עם מאות הגבינות והבגט של אונסק״ו. בנו תעלומה שמתאימה לזמן טיסה: משימות חלון ועננים, חידות על היעד, ומשימת האזנה לצרפתית של אנשי הצוות.'},
+'REST': {raw:true, t:'בהפסקת מנוחה בדירה בפריז, מסתתרים מהחום במיזוג', bg:'גם מהספה אפשר לחקור את פריז: הרבעים של העיר מסודרים בצורת שבלול שמתפתל מהמרכז החוצה (הדירה שלנו ברובע 8), הסן חוצה את העיר לגדה ימנית ושמאלית, את השדרות הרחבות תכנן הברון האוסמן לפני 150 שנה כשהרס חצי עיר ובנה אותה מחדש, והכינוי ״עיר האורות״ הגיע מכך שפריז הייתה מהראשונות בעולם עם תאורת רחוב. הפעם, במקום משימות שטח, בנו את הציד כחידון־תעלומה שפותרים מהספה: שאלות טריוויה מסתוריות על פריז, עם רמזים, שהילדים עונים בתורות.'},
+'PREP': {raw:true, t:'בבית בישראל, מתכוננים ואורזים לקראת המשימה בפריז', bg:'כל בלש טוב יוצא למשימה מצויד: כובע נגד שמש הפריזאית, בקבוק מים (בפריז יש ברזיות ירוקות עתיקות בשם ״מזרקות וואלאס״ שמחלקות מים חינם כבר 150 שנה!), נעליים נוחות לרצפות אבן של ארמונות, ועיניים פקוחות. בנו את התעלומה כתדריך סוכנים לפני יציאה: משימות אריזה מנוסחות כציוד סודי, שלוש עובדות על פריז שסוכן חייב לדעת לפני נחיתה, וחידה אחת שהפתרון שלה יחכה להם בפריז עצמה.'},
+'CDG': {t:'שדה התעופה שארל דה גול', bg:'זה השדה הגדול בצרפת ואחד העמוסים באירופה, שנפתח ב־1974; טרמינל 1 העגול, עם מנהרות הזכוכית שחוצות אותו באלכסון, נחשב בזמנו לעתידני כמו חללית. השדה קרוי על שם שארל דה גול — הגנרל הגבוה (כמעט שני מטר!) שסירב להיכנע במלחמת העולם השנייה, שידר מלונדון קריאה מפורסמת לצרפתים להמשיך להילחם ב־18 ביוני 1940, ואחר כך היה נשיא צרפת. הכיכר של שער הניצחון קרויה גם היא על שמו — והמשפחה תעמוד עליה ממש השבוע. וכמה דברים על צרפת שכדאי לבלשים לדעת כבר עכשיו: הצרפתים קוראים למדינה שלהם ״המשושה״ בגלל צורתה במפה, יש בה מאות סוגי גבינות, היא המדינה המתוירת בעולם — והבגט הצרפתי הוכרז נכס תרבות עולמי של אונסק״ו.'},
+'Gare Saint-Lazare Paris': {t:'תחנת הרכבת סן־לזאר', bg:'זו אחת מתחנות הרכבת הוותיקות והעמוסות באירופה — קו הרכבת הראשון של פריז יצא מכאן כבר ב־1837. הצייר קלוד מונה כל כך התאהב בענני הקיטור והאור שבתחנה, שב־1877 העמיד כאן כן ציור וצייר אותה שוב ושוב — כתריסר תמונות, שחלקן תלויות היום במוזיאון ד׳אורסיי. בכיכר שבחוץ עומד פסל מגדל של שעונים ישנים — כולם מראים שעה אחרת.'},
+'Jardin des Tuileries Paris': {t:'גני הטווילרי', bg:'הגן נוסע 460 שנה אחורה: קתרין דה מדיצ׳י הקימה אותו ב־1564 ליד ארמון הטווילרי, שנקרא על שם מפעלי הרעפים (tuiles) שהיו כאן. הארמון עצמו נשרף ב־1871 ונעלם לגמרי — נשאר רק הגן. הכיסאות הירוקים חופשיים להזזה, ויש בריכה עגולה עם סירות מפרש קטנות להשכרה.'},
+'Sacré-Cœur Montmartre Paris': {t:'מונמרטר והסקרה־קר', bg:'הכנסייה הלבנה נבנתה 1875–1914 על הגבעה הגבוהה בפריז. האבן שלה מלבינה דווקא כשיורד גשם. בפנים אחת הפסיפסים הגדולים בעולם, ופעמון ״סבויארד״ במשקל כ־19 טון. מונמרטר היה כפר של ציירים עניים — פיקאסו הצעיר גר וצייר כאן, ובכיכר טרטר ציירים עובדים עד היום. יש פוניקולר קטן שמטפס במקום המדרגות.'},
+'Merci concept store 111 Boulevard Beaumarchais Paris': {t:'חנות Merci', bg:'חנות קונספט שנפתחה ב־2009 במפעל בדים ישן, ובחצר הכניסה חונה פיאט 500 אדומה קטנה שהפכה לסמל שלה. המייסדים תורמים חלק מהרווחים לחינוך ילדים במדגסקר — לכן השם ״תודה״.'},
+'Marin Montagut Paris': {t:'חנות מרן מונטגו', bg:'חנות של מאייר צעיר מטולוז שמצייר ביד את כלי הבית, המחברות והקופסאות. היא מעוצבת כמו חדר פלאות ישן מהמאה הקודמת — מגירות, צנצנות ואיורים בכל פינה.'},
+'Papier Tigre Paris': {t:'חנות הנייר Papier Tigre', bg:'מותג נייר פריזאי שנוסד ב־2012, מפורסם בעיצובים גיאומטריים צבעוניים ובנייר ממוחזר. ״נמר הנייר״ הוא סמל שלהם — חיה שנראית מפחידה אבל עשויה כולה נייר.'},
+'Galeries Lafayette Haussmann Paris': {t:'גלרי לפאייט', bg:'הכלבו נפתח ב־1912 עם כיפת זכוכית ניאו־ביזנטית בגובה 43 מטר. ב־1919 טייס בשם ז׳יל ודרין הנחית אווירון ממש על הגג כדי לזכות בהתערבות — וקיבל קנס. הגג פתוח חינם עם נוף לאופרה ולמגדל אייפל.'},
+'Vedettes du Pont Neuf, Square du Vert Galant Paris': {t:'שיט על הסן מגשר פון נף', bg:'פון נף פירושו ״הגשר החדש״ — אבל הוא דווקא הגשר העתיק ביותר שעומד בפריז (הושלם ב־1607). בשיט עוברים ליד הלובר, נוטרדאם עם הגרגויילים, ומגדל אייפל. על גשר אלמה יש פסל חייל (״זואב״) שמשמש עד היום מד־הצפות: כשהמים מגיעים לרגליו — סוגרים את הטיילות.'},
+'Paradox Museum Paris': {t:'מוזיאון פרדוקס', bg:'מוזיאון של אשליות אופטיות: חדר איימס שבו אנשים נראים ענקים או גמדים, חדרים הפוכים, ומנהרות מראות. הכול בנוי על טריקים אמיתיים של מדע וראייה — העיניים שלנו משקרות לנו.'},
+'Musée Grévin Paris': {t:'מוזיאון השעווה גרווין', bg:'מוזיאון שעווה שנפתח ב־1882 — לפני שהוליווד בכלל הומצאה. מאות דמויות שעווה של מפורסמים ורגעים מההיסטוריה הצרפתית, ו״ארמון המראות״ — מופע אור ומראות מקורי מהיריד העולמי של שנת 1900.'},
+'Cédric Grolet Opéra Paris': {t:'הקונדיטוריה של סדריק גרולה', bg:'גרולה נחשב לאחד הקונדיטורים המפורסמים בעולם בזכות ״פירות האשליה״: לימון, תפוח או אגוז שנראים אמיתיים לגמרי — אבל הם קינוח. מבחוץ קליפת שוקולד מפוסלת, מבפנים קרם והפתעות.'},
+'Musée du Louvre Paris': {t:'מוזיאון הלובר', bg:'הלובר התחיל כמבצר עם חפיר לפני 800 שנה — את יסודות המבצר רואים עד היום בקומת המרתף. אחר כך היה ארמון מלכים, והיום המוזיאון הגדול בעולם. המונה ליזה נגנבה ב־1911 על ידי שיפוצניק איטלקי ונמצאה רק אחרי שנתיים — הגניבה היא שהפכה אותה למפורסמת. פירמידת הזכוכית (1989) עשויה 673 לוחות זכוכית, לוונוס ממילו חסרות הידיים מאז שנמצאה באי יווני ב־1820, וניקה המכונפת עומדת על חרטום ספינה.'},
+'Arc de Triomphe Paris': {t:'שער הניצחון', bg:'נפוליאון הזמין את השער ב־1806 אחרי ניצחון אוסטרליץ והבטיח לחייליו ״תשובו הביתה דרך שערי ניצחון״ — אבל הוא הושלם רק ב־1836, אחרי נפילתו. מתחת לשער קבר החייל האלמוני עם להבה שמודלקת מחדש כל ערב ב־18:30. מהכיכר יוצאות 12 שדרות בצורת כוכב — לכן שמה ״אטואל״. על הקירות חקוקים שמות קרבות וגנרלים.'},
+'PSG Store 92 Avenue des Champs-Élysées Paris': {t:'השאנז אליזה וחנות פריז סן־ז׳רמן', bg:'השדרה נמתחת 1.9 ק״מ מהאובליסק בקונקורד עד שער הניצחון, וכאן מסתיים כל שנה הטור דה פראנס. פריז סן־ז׳רמן היא מועדון צעיר יחסית — נוסד רק ב־1970 — והפך לאחת הקבוצות המפורסמות בעולם. בחנות הדגל: החולצות, גביעים ופינות צילום.'},
+'Place de la Concorde Paris': {t:'כיכר הקונקורד', bg:'במרכז הכיכר עומד אובליסק בן 3,300 שנה מהמקדש בלוקסור — מתנה ממצרים לצרפת, מכוסה בכתב חרטומים של רעמסס השני, עם חוד מוזהב שנוסף ב־1998. בזמן המהפכה הצרפתית עמדה כאן הגיליוטינה, וכאן הסתיים סיפורם של המלך לואי ה־16 ומרי אנטואנט. שתי המזרקות הועתקו ממזרקות רומא.'},
+'Pont Alexandre III Paris': {t:'גשר אלכסנדר השלישי', bg:'הגשר המפואר בפריז נבנה ליריד העולמי של 1900 ונקרא על שם הצאר הרוסי — סמל לברית בין צרפת לרוסיה. קשת פלדה אחת חוצה את כל הנהר, ובארבע פינותיו פסלי פגסוס מוזהבים שנוצצים בשמש.'},
+'Palais Garnier Paris': {t:'אופרה גרנייה', bg:'בית האופרה נחנך ב־1875, ומתחתיו יש באמת מאגר מים תת־קרקעי — הוא שנתן השראה ל״אגם״ של פנטום האופרה. ב־1896 נפל משקל־נגד של הנברשת הענקית (כ־8 טון!) על הקהל — והסיפור הזה נכנס לרומן. את התקרה צייר מחדש מארק שאגאל ב־1964.'},
+'Marché Notre-Dame Versailles': {t:'שוק נוטרדאם בוורסאי', bg:'כיכר השוק תוכננה כבר ב־1671, כשלואי ה־14 בנה עיר שלמה סביב הארמון החדש שלו. ארבעת ביתני האוכל (ה״קארה״) פועלים מאז, וזה עדיין השוק הגדול באזור — גבינות, מאפים, פירות ודוכני פרחים, בשיא דווקא בבוקר יום ראשון.'},
+'Château de Versailles': {t:'ארמון ורסאי', bg:'לואי ה־14, ״מלך השמש״, הפך בקתת ציד של אביו לארמון הגדול באירופה עם כ־2,300 חדרים. באולם המראות 357 מראות — בזמנו מראות היו טכנולוגיה יקרה שסודה נגנב מוונציה. חצר המלוכה חיה כאן לפי טקסים מוזרים: אצילים התחרו על הכבוד לצפות במלך מתעורר בבוקר.'},
+'Gardens of Versailles': {t:'גני ורסאי', bg:'הגנן אנדרה לה־נוטר עבד על הגנים 40 שנה: גיאומטריה מושלמת, חורשות סודיות ותעלה ענקית לשייט גונדולות. למזרקות לא היו מספיק מים — אז הפעילו אותן רק כשהמלך התקרב, עם שריקות סימון בין הגננים.'},
+'Hameau de la Reine Versailles': {t:'הכפר של מארי אנטואנט', bg:'ב־1783 בנתה המלכה מארי אנטואנט כפר איכרים מזויף — בקתות, טחנה, אגם וחיות משק אמיתיות — כדי לברוח מחוקי הארמון ולשחק בחיים פשוטים. לפטי טריאנון שלה נכנסו רק מי שהוזמנו אישית, ואפילו המלך היה צריך הזמנה.'},
+'Stade de France Saint-Denis': {t:'אצטדיון סטאד דה פראנס', bg:'האצטדיון נבנה למונדיאל 1998 — ובגמר, בדיוק כאן, צרפת ניצחה את ברזיל 3:0 וזכתה בגביע העולם הראשון שלה. יותר מ־80,000 מושבים, וגג תלוי ענק שמשקלו קרוב למשקל מגדל אייפל. בסיור עוברים בחדרי ההלבשה ובמנהרת השחקנים.'},
+'Eiffel Tower Paris': {t:'מגדל אייפל', bg:'המגדל נבנה ליריד העולמי של 1889 בשנתיים בלבד, ואמור היה להתפרק אחרי 20 שנה — אנטנת הרדיו בראשו הצילה אותו. בקיץ הוא ״גדל״ עד 15 ס״מ כי המתכת מתרחבת בחום. צובעים אותו ביד כל כמה שנים ב־60 טון צבע, לגוסטב אייפל הייתה דירה זעירה בפסגה, ובלילה מנצנצות עליו 20,000 נורות.'}
+};
+
+function aiPrompt(name,bg,raw){
+  return 'אתם כותבי ״תעלומה בזמן״ לילדים, בסגנון הסדרה של בית אביחי. אנחנו משפחה מישראל עם ילדים בני 8 ו־11, '+(raw ? 'ואנחנו '+name+'.' : 'ואנחנו נמצאים ממש עכשיו ב'+name+' שבפריז.')+' רקע אמיתי בשבילכם: '+bg+' כתבו לנו בעברית חוויית ציד־מטמון היסטורי שמתרחשת כאן, בנויה כך: 1) פתיחה קצרה ומסתורית שבה דמות אמיתית מההיסטוריה של המקום שולחת לילדים קריאה לעזרה מתוך הזמן; 2) ארבע עד חמש משימות חיפוש שהילדים יכולים לבצע במקום בעיניים ממש עכשיו (״מצאו את...״, ״ספרו כמה...״, ״חפשו את הפרט ש...״); 3) חידה אחת שהפתרון שלה מסתתר במקום עצמו; 4) סיום שבו התעלומה נפתרת ומתגלה עובדה מפתיעה אחת. מותח, מצחיק וקצר — עד 350 מילים, ובלי להמציא עובדות.';
+}
+function aiGeneric(name){
+  return 'אתם כותבי ״תעלומה בזמן״ לילדים, בסגנון הסדרה של בית אביחי. אנחנו משפחה מישראל עם ילדים בני 8 ו־11, ואנחנו נמצאים ממש עכשיו ב'+name+' שבפריז. בדקו מה המקום הזה ומהי ההיסטוריה האמיתית שלו, וכתבו לנו בעברית חוויית ציד־מטמון היסטורי שמתרחשת כאן: פתיחה מסתורית שבה דמות אמיתית מעברו של המקום מבקשת מהילדים עזרה; ארבע עד חמש משימות חיפוש שאפשר לבצע במקום בעיניים (״מצאו את...״, ״ספרו כמה...״); חידה אחת שפתרונה מסתתר במקום; וסיום עם עובדה מפתיעה. עד 350 מילים, רק עובדות אמיתיות.';
+}
+function copyText(t){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));
+  }
+  return Promise.resolve(fallbackCopy(t));
+}
+function fallbackCopy(t){
+  const ta=document.createElement('textarea');
+  ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+}
+function bindAi(root){
+  root.querySelectorAll('button[data-ai],button[data-aik]').forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      const k=b.dataset.aik;
+      const txt = (k && AIBG[k]) ? aiPrompt(AIBG[k].t, AIBG[k].bg, AIBG[k].raw) : aiGeneric(b.dataset.ai||'המקום הזה');
+      copyText(txt);
+      const orig=b.innerHTML;
+      b.innerHTML='✓ הועתק — הדביקו ב־AI';
+      setTimeout(()=>{ b.innerHTML=orig; }, 2000);
+    };
+  });
+}
+
+/* ═══════════ עזרי מפה ═══════════ */
+const G = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+const GDIR = (from,to,mode) => 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(from) + '&destination=' + encodeURIComponent(to) + '&travelmode=' + (mode||'walking');
+const HOME = "8 Rue de l'Arcade, 75008 Paris";
+
+const HEAT = t => t==null?'var(--ink-soft)':t>=38?'var(--heat-extreme)':t>=36?'var(--heat-hot)':t>=33?'var(--heat-warm)':'var(--heat-ok)';
+
+/* ═══════════ נתוני הימים ═══════════ */
+const DAYS = [
+{
+ id:'d0', date:'2026-07-27', short:'ב׳', label:'ב׳ 27.7', temp:null,
+ title:'התארגנות — יום לפני הטיסה',
+ note:'היעד: להגיע ל־01:30 בלילה ארוזים, עם מסמכים בדרייב וילדים שישנו כמה שיותר מוקדם.',
+ stops:[
+  {t:'בוקר', h:'צ׳ק־אין אונליין לאל על', p:'נפתח 24 שעות לפני הטיסה (05:40). לבצע לכל ארבעת הנוסעים, לבחור מושבים, ולשמור כרטיסי עלייה בטלפונים + PDF לדרייב.', chips:[['book','elal.com']], aik:'FLY'},
+  {t:'צהריים', h:'העלאת מסמכים לדרייב', p:'תיקיית "פריז 2026 – מסמכים": צילומי דרכונים, כרטיסי LY316, אישורי לובר/ורסאי/שיט/דירה, ביטוח נסיעות. לשתף עם כולם ולסמן "זמין במצב לא מקוון" בכל טלפון.', chips:[['free','הוראות בלשונית מידע']], aik:'PREP'},
+  {t:'אחה״צ', h:'אריזה', p:'מזוודות + תיק יד לכל אחד: כובעים, בקבוקים ריקים (ממלאים אחרי הבידוק), מטענים ואוזניות לטיסה, בגד עליון קל למיזוג, תרופות בתיק היד. לשקול בגדי החלפה בתיק היד.', chips:[], aik:'FLY'},
+  {t:'ערב מוקדם', h:'ארוחת ערב והשכבה מוקדמת', p:'הילדים ישנים כמה שאפשר לפני יקיצה של 01:00. מבוגרים — גם.', chips:[], rest:true, aik:'REST'},
+  {t:'לפני השינה', h:'וידוא אחרון', p:'ההסעה ל־01:30 מאושרת, דרכונים+כרטיסים בתיק אחד ידוע, טלפונים בטעינה, שעונים מכוונים.', chips:[['taxi','הסעה מאושרת']], aik:'PREP'}
+ ]
+},
+{
+ id:'d1', date:'2026-07-28', short:'ג׳', label:'ג׳ 28.7', temp:34,
+ title:'טיסה, הגעה והיכרות ראשונה',
+ note:'לילה לבן ואז יום חם — היום הזה נמדד רק בהתאקלמות. ערב לפי הכוח שנשאר.',
+ fix:'צ׳ק־אין בדירה: בדקו מראש מאיזו שעה. אם הכניסה רק אחה״צ — לתאם השארת מזוודות אצל המארח ולהעביר את הזמן בבית קפה ליד.',
+ stops:[
+  {t:'01:30', h:'יציאה מצור הדסה לנתב״ג', p:'~50 דק׳ נסיעה בלילה. להיות בטרמינל עד 02:40 — שלוש שעות לפני ההמראה.', chips:[['taxi','הסעה מוזמנת']], aik:'FLY'},
+  {t:'05:40 → 09:30', h:'טיסה LY316 לפריז', p:'~5.5 שעות. לעודד את הילדים לישון — היום עוד ארוך.', chips:[['have','כרטיסים קיימים']], aik:'FLY'},
+  {t:'09:30–10:45', h:'נחיתה ב־CDG', p:'ביקורת דרכונים (תור ארוך באוגוסט), מזוודות, ויציאה. עוקבים אחרי שילוט Taxi / Roissybus / RER לפי הבחירה. טיפ: התעלומה הראשונה של הטיול מחכה בכפתור למטה — מושלמת לתור בביקורת הדרכונים.', chips:[], aik:'CDG'},
+  {t:'~11:00–12:00', h:'נסיעה לדירה', p:'Roissybus עד Opéra + 8 דק׳ הליכה, או RER B + מטרו 14, או מונית — פירוט בלשונית תחבורה. בדירה: מים, מקלחת ומנוחה אמיתית.', chips:[['bus','Roissybus'],['rerb','RER B + 14'],['taxi','או מונית'],['tix','כרטיס Airport €14']], m:HOME, dirs:[['מ־CDG בתח״צ','Charles de Gaulle Airport',"8 Rue de l'Arcade Paris",'transit'],['מ־CDG במונית','Charles de Gaulle Airport',"8 Rue de l'Arcade Paris",'driving']], aik:'CDG'},
+  {t:'12:30–17:00', h:'מנוחה', p:'אחרי לילה לבן — שינה קצרה לכולם. לא לוותר עליה.', chips:[], rest:true, aik:'REST'},
+  {t:'17:30', h:'קפה ומאפה שכונתי', p:'מקום קרוב לדירה. בלי הזמנה.', chips:[['walk','2–5 דק׳']], m:"cafe near 8 Rue de l'Arcade Paris", aik:'CAFE'},
+  {t:'18:15–20:30', key:'d1eve', h:'ערב ראשון — לפי הכוח', choice:[
+    {h:'היכרות שכונתית רגועה', p:'כנסיית המדלן מבחוץ (2 דק׳) ← Rue Royale ← כיכר הקונקורד ← ישיבה בגני הטווילרי. הליכה שטוחה וקצרה, חוזרים מתי שרוצים. הבחירה השפויה אחרי לילה לבן.', chips:[['walk','ברגל'],['free','חינם']], m:'Jardin des Tuileries Paris', dir:true},
+    {h:'ערב פתיחה במונמרט', p:'רק אם כולם מפתיעים באנרגיה: מטרו 12 מ־Madeleine ישיר ל־Abbesses, פוניקולר לסקרה־קר, שקיעה מהמדרגות. עמוס — שימו לב לתיקים.', chips:[['l12','מטרו 12'],['tix','פוניקולר בכרטיס מטרו']], m:'Sacré-Cœur Montmartre Paris'}
+  ]},
+  {t:'20:45', h:'ארוחת ערב ושינה מוקדמת', p:'ערב פשוט באזור הדירה.', chips:[['walk','ברגל']], m:HOME, aik:'REST'}
+ ]
+},
+{
+ id:'d2', date:'2026-07-29', short:'ד׳', label:'ד׳ 29.7', temp:38,
+ title:'עיצוב ונייר בבוקר + שיט ערב',
+ note:'היום החם ביותר. פעילות בחוץ רק בבוקר מוקדם ובערב; את הצהריים מעבירים במיזוג. אם נשחקים בבוקר — Papier Tigre הוא הוויתור הטבעי.',
+ stops:[
+  {t:'08:15', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
+  {t:'09:00', h:'Merci', p:'חנות קונספט גדולה במארה. 45–60 דקות. מטרו 8 ישיר מ־Madeleine ל־Saint-Sébastien–Froissart.', chips:[['l8','מטרו 8'],['free','חינם']], m:'Merci concept store 111 Boulevard Beaumarchais Paris', dir:true},
+  {t:'10:15', h:'Marin Montagut', p:'חנות קטנה ומעוצבת: כלי בית מצוירים ומזכרות לא־תיירותיות.', chips:[['taxi','מונית קצרה'],['free','חינם']], m:'Marin Montagut Paris'},
+  {t:'11:10', h:'Papier Tigre', p:'נייר וכלי כתיבה. הוויתור הטבעי אם נשחקים.', chips:[['taxi','מונית קצרה'],['free','חינם']], m:'Papier Tigre Paris'},
+  {t:'12:00–13:00', h:'חזרה וצהריים בדירה', p:'', chips:[['taxi','מונית'],['l8','או מטרו 8']], rest:true, aik:'REST'},
+  {t:'13:00–19:30', key:'d2mid', h:'צהריים ב־38° — איפה מעבירים?', choice:[
+    {h:'מנוחה מלאה בדירה', p:'מיזוג, שינה, משחקים. האופציה הבטוחה ביום הכי חם, לפני ערב עם שיט.', chips:[['free','חינם']], aik:'REST'},
+    {h:'גלרי לפאייט הממוזגת', p:'8 דקות הליכה: הכיפה המפוארת, קומות במיזוג, וגג תצפית חינמי. שעה-שעתיים ואז חוזרים למנוחה — לא במקום כל המנוחה.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
+  ]},
+  {t:'20:15', h:'לרציף Vedettes du Pont Neuf', p:'מטרו 14 מ־Madeleine עד Châtelet ואז 8 דק׳ הליכה לרציף, או מונית (~10 דק׳).', chips:[['l14','מטרו 14'],['taxi','או מונית']], m:'Vedettes du Pont Neuf, Square du Vert Galant Paris', dir:true},
+  {t:'21:00–22:00', h:'שיט על הסן', p:'כשעה: הלובר, נוטרדאם, ד׳אורסיי ומגדל אייפל.', chips:[['book','להזמין מראש']]},
+  {t:'22:00', h:'נצנוץ מגדל אייפל', p:'5 דקות בתחילת כל שעה אחרי החשכה.', chips:[['free','חינם']]},
+  {t:'22:15', h:'חזרה לדירה', p:'מטרו 14 חזרה או מונית.', chips:[['l14','מטרו 14'],['taxi','או מונית']], m:HOME, aik:'METRO'}
+ ]
+},
+{
+ id:'d3', date:'2026-07-30', short:'ה׳', label:'ה׳ 30.7', temp:34,
+ title:'מוזיאון, גרולה, הלובר וערב שאנז',
+ note:'היום הגדול של הטיול: בוקר ממוזג, הלובר ב־15:00, וערב השיא בשאנז. שתי המנוחות בלו״ז הן לא המלצה — הן מה שמחזיק את הערב.',
+ fix:'הלובר נסגר בימי חמישי בדרך כלל ב־18:00 (אולמות מ־17:30) — בפועל ~2.5 שעות, מספיק לרשימת המיקוד. אם הבוקר מרגיש עמוס מדי — אפשר לוותר על המוזיאון ולשמור אותו לשני אחה״צ, שם הוא כבר מופיע כאופציה.',
+ stops:[
+  {t:'08:30', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
+  {t:'10:00–11:30', key:'d3morn', h:'בוקר ממוזג — איזה מוזיאון?', choice:[
+    {h:'Paradox Museum', p:'מוזיאון אשליות אינטראקטיבי — חדרי צילום, מראות ומשימות לילדים. 10–12 דק׳ הליכה מהדירה.', chips:[['walk','ברגל'],['book','להזמין מראש']], m:'Paradox Museum Paris', dir:true},
+    {h:'מוזיאון השעווה גרווין', p:'מוזיאון השעווה הקלאסי בפסאז׳ מפואר על שדרות מונמארטר — סלבריטאים ותיאטרון מראות. ~15 דק׳ הליכה או מטרו 8. השני יכול לשמש גיבוי לשני אחה״צ.', chips:[['walk','15 דק׳'],['l8','או מטרו 8'],['book','כדאי כרטיס אונליין']], m:'Musée Grévin Paris', dir:true}
+  ]},
+  {t:'11:45–12:30', h:'Cédric Grolet Opéra', p:'קונדיטוריה מפורסמת בקינוחים דמויי פירות — בדרך חזרה. קונים פריט או שניים. ייתכן תור.', chips:[['walk','ברגל'],['tix','ייתכן תור']], m:'Cédric Grolet Opéra Paris', dir:true},
+  {t:'12:30–14:00', h:'צהריים ומנוחה בדירה', p:'מנוחה אמיתית — היום עוד ארוך.', chips:[], rest:true, aik:'REST'},
+  {t:'14:15', h:'הגעה ללובר', p:'מטרו 14 מ־Madeleine תחנה אחת ל־Pyramides + 7 דק׳ הליכה. להגיע 30–40 דקות לפני השעה שבכרטיס.', chips:[['l14','מטרו 14'],['have','כרטיס קיים']], m:'Musée du Louvre Paris', dir:true},
+  {t:'15:00–17:45', h:'הלובר — מיקוד בלבד', p:'4–5 אזורים: מונה ליזה, ונוס ממילו, ניקה מסמותרקי, גלריית אפולו והאגף המצרי. הילדים חינם.', chips:[['have','כרטיס קיים']]},
+  {t:'18:00–19:30', h:'חזרה, ארוחת ערב ומנוחה', p:'לאסוף כוחות לערב.', chips:[['l14','מטרו 14']], rest:true, aik:'REST'},
+  {t:'19:45', h:'RER A לשער הניצחון', p:'הליכה 7 דק׳ ל־Auber, תחנה אחת עד Charles de Gaulle–Étoile.', chips:[['walk','7 דק׳'],['tix','RER A']], m:'Auber RER station Paris', aik:'METRO'},
+  {t:'20:00–21:00', h:'שער הניצחון — כולל אופציית תצפית', p:'בקיץ התצפית פתוחה עד מאוחר (בדקו שעת כניסה אחרונה). שקיעה מהגג עם ציר השאנז המואר — קטינים בד״כ חינם. או מבחוץ.', chips:[['book','להזמין אם עולים'],['free','מבחוץ חינם']], m:'Arc de Triomphe Paris'},
+  {t:'21:00–22:15', h:'שאנז אליזה + חנות PSG', p:'הליכה במורד השדרה המוארת. עצירת חובה: חנות הדגל של פריז סן־ז׳רמן (מס׳ 92) — פתוחה עד מאוחר, בדקו שעות ביום עצמו.', chips:[['walk','ירידה מתונה'],['free','חינם (חוץ מהחולצות…)']], m:'PSG Store 92 Avenue des Champs-Élysées Paris'},
+  {t:'22:30', h:'חזרה לדירה', p:'RER A מ־Étoile ל־Auber, או מטרו 1 ל־Concorde והליכה קצרה.', chips:[['tix','RER A'],['l1','או מטרו 1']], m:HOME, aik:'METRO'}
+ ]
+},
+{
+ id:'d4', date:'2026-07-31', short:'ו׳', label:'ו׳ 31.7', temp:33,
+ title:'בוקר לבחירה וקניות לשבת',
+ note:'מסיימים את כל הקניות עד הצהריים.',
+ stops:[
+  {t:'07:45', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
+  {t:'08:30–11:00', key:'d4morn', h:'בוקר שישי — מה עושים?', choice:[
+    {h:'בוקר רגוע בטווילרי', p:'הליכה מוקדמת לגנים לפני החום, קרוסלה וסירות מפרש קטנות בבריכה לילדים, וחזרה בנחת.', chips:[['walk','10–12 דק׳'],['free','חינם']], m:'Jardin des Tuileries Paris', dir:true},
+    {h:'גלרי לפאייט + גג התצפית', p:'נפתחת סביב 10:00 — מתאים אם לא הלכתם בחמישי. 8 דק׳ מהדירה, וחוזרים ישר לסופר.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
+  ]},
+  {t:'11:00–12:15', h:'קניות לשבת — לא לדחות!', p:'Monoprix גדול ב־47 Boulevard Malesherbes, ~6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי.', chips:[['walk','ברגל']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
+  {t:'12:15 ואילך', h:'ארגון האוכל ומנוחה לקראת שבת', p:'', chips:[], rest:true, aik:'REST'}
+ ]
+},
+{
+ id:'d5', date:'2026-08-01', short:'ש׳', label:'ש׳ 1.8', temp:37,
+ title:'יום הליכה בלבד סביב הדירה',
+ note:'חום כבד. יוצאים מוקדם, חוזרים למיזוג, ויוצאים שוב רק בערב. אין רכישות ואין תחבורה.',
+ stops:[
+  {t:'07:30–08:00', h:'ארוחת בוקר בדירה ויציאה', p:'', chips:[], aik:'REST'},
+  {t:'08:00–08:20', h:'הליכה דרך המדלן לקונקורד', p:'במורד Rue Royale — הרחוב עוד שקט וצונן.', chips:[['walk','ברגל'],['free','חינם']], m:'Place de la Concorde Paris', dir:true},
+  {t:'08:20–09:15', h:'גני הטווילרי', p:'השדרה המרכזית, כיסאות ירוקים ליד הבריכה, הילדים מסתובבים.', chips:[['walk','ברגל'],['free','חינם']], m:'Jardin des Tuileries Paris'},
+  {t:'09:15–10:00', h:'גדות הסן עד גשר אלכסנדר השלישי', p:'קטע קצר לאורך הנהר עד הגשר המפואר ביותר בפריז. תצפית, מים, ולא ממשיכים רחוק.', chips:[['walk','ברגל'],['free','חינם']], m:'Pont Alexandre III Paris'},
+  {t:'10:00–10:45', h:'חזרה לפני העלייה בטמפרטורות', p:'', chips:[['walk','ברגל']], m:HOME, aik:'METRO'},
+  {t:'11:00–19:30', h:'ארוחה, מנוחה ומיזוג', p:'', chips:[], rest:true, aik:'REST'},
+  {t:'20:00–21:00', h:'טיול ערב קצר', p:'לאופרה גרנייה המוארת (8 דק׳) או סיבוב סביב המדלן.', chips:[['walk','ברגל']], m:'Palais Garnier Paris'}
+ ]
+},
+{
+ id:'d6', date:'2026-08-02', short:'א׳', label:'א׳ 2.8', temp:32,
+ title:'ורסאי — העיירה, הארמון והגנים',
+ note:'הכרטיסים (גישה מלאה, 13:30, הגעה 13:00) משאירים בוקר שלם לעיירה עצמה — וביום ראשון היא במיטבה: יום השוק. יום ארוך; שומרים אנרגיה לילדים עם הפסקות ישיבה.',
+ fix:'כרטיס "גישה מלאה" (Passport) כולל את הארמון, הגנים והטריאנון — בדקו אם מופעי המזרקות (Grandes Eaux, פועלים בימי ראשון בקיץ) כלולים או בתוספת. גיבוי אם RER C מושבת: רכבת L מסן־לזאר ל־Versailles Rive Droite — אפילו קרובה יותר לרובע השוק.',
+ stops:[
+  {t:'07:45', h:'יציאה: מטרו 8 + RER C', p:'מטרו 8 מ־Madeleine ל־Invalides, RER C לכיוון ורסאי, ירידה ב־Versailles Château Rive Gauche (~09:00). ארוחת בוקר, מים וכובעים מהבית.', chips:[['l8','מטרו 8'],['rerc','RER C'],['tix','€2.55']], m:'Versailles Château Rive Gauche station', dir:true, aik:'REST'},
+  {t:'09:15–11:00', h:'רובע נוטרדאם ויום השוק', p:'הליכה לרובע ההיסטורי: שוק Marché Notre-Dame — ביום ראשון הוא בשיאו, דוכנים בכיכר וביתני אוכל מקורים (גבינות, פירות, מאפים). מסביב: מעבר האנטיקווריאטים Passage de la Geôle (פתוח בסופ״ש) ורחוב de la Paroisse.', chips:[['walk','~12 דק׳'],['free','שוטטות חינם']], m:'Marché Notre-Dame Versailles'},
+  {t:'11:00–12:30', h:'שוטטות וארוחת צהריים מוקדמת', p:'פיקניק מדוכני השוק בכיכר, או מסעדה קלה ברובע. אפשר גם לחצות לרחוב Satory שליד הקתדרלה. לא מתרחקים — ב־12:40 מתחילים ללכת לארמון.', chips:[['free','לפי הבחירה']], m:'Rue de Satory Versailles', aik:'CAFE'},
+  {t:'13:00', h:'הגעה לכניסת הארמון', p:'כפי שנדרש בכרטיס — חצי שעה לפני. ~12 דקות הליכה מהשוק.', chips:[['walk','12 דק׳'],['have','כרטיסים קיימים']], m:'Château de Versailles'},
+  {t:'13:30–15:30', h:'הארמון', p:'חדרי המלך והמלכה, אולם המראות. הילדים חינם.', chips:[['have','כרטיס קיים']]},
+  {t:'15:30–17:15', h:'הגנים', p:'מדשאות, חורשות ותעלות — בכרטיס המלא. 32° אחה״צ: להיצמד לחורשות המוצלות, מזרקה-שתיים, ולא לנסות לכסות הכול.', chips:[['walk','ברגל'],['have','בכרטיס המלא']], m:'Gardens of Versailles'},
+  {t:'17:15–18:45', key:'d6late', h:'להמשיך או לחזור?', choice:[
+    {h:'טריאנון והכפר של מארי אנטואנט', p:'כלול בכרטיס המלא: הארמונות הקטנים והכפר הכפרי עם הבקתות, האגם והחיות — קסום לילדים. מרחק הליכה לא קטן; הרכבת הפנימית (בתשלום) חוסכת רגליים.', chips:[['have','בכרטיס המלא'],['tix','רכבת פנימית בתשלום']], m:'Hameau de la Reine Versailles'},
+    {h:'סיום מוקדם וחזרה', p:'אם הרגליים נגמרו — סיבוב אחרון בגנים, גלידה ליד התעלה, וחזרה הביתה. ורסאי מנצח גם בלי טריאנון.', chips:[['rerc','RER C'],['l8','מטרו 8']], aik:'METRO'}
+  ]},
+  {t:'~19:00', h:'חזרה לפריז', p:'RER C ל־Invalides + מטרו 8 הביתה.', chips:[['rerc','RER C'],['l8','מטרו 8']], m:HOME, aik:'METRO'},
+  {t:'20:00 ואילך', h:'ערב שקט ליד הדירה', p:'', chips:[], rest:true, aik:'REST'}
+ ]
+},
+{
+ id:'d7', date:'2026-08-03', short:'ב׳', label:'ב׳ 3.8', temp:30,
+ title:'אצטדיון, אייפל ומונמרט — יום הבחירות הגדול',
+ note:'היום הקריר ביותר, אבל עם סיכוי לסופות — כל בחירה כאן צריכה בדיקת תחזית בבוקר. בערב אורזים אריזה ראשונה.',
+ fix:'עלייה לאייפל: להזמין מראש באתר הרשמי — הפסגה נמכרת ימים קדימה. בסופת ברקים הפסגה נסגרת; אם התחזית גרועה, המוזיאון הוא הבחירה.',
+ stops:[
+  {t:'08:00', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
+  {t:'08:40', h:'מטרו 13 צפונה לאצטדיון', p:'מסן־לזאר לכיוון Saint-Denis-Université (לא Asnières!), יורדים ב־Saint-Denis – Porte de Paris, ~10 דק׳ ברגל.', chips:[['l13','מטרו 13'],['tix','€2.55']], m:'Gare Saint-Lazare Paris', dir:true},
+  {t:'09:30–11:00', h:'סיור באצטדיון הלאומי', p:'יציעים, חדרי הלבשה, מנהרת שחקנים. חובה להזמין מראש.', chips:[['book','להזמין מראש']], m:'Stade de France Saint-Denis'},
+  {t:'11:15–12:00', h:'חזרה למרכז', p:'מטרו 13 לסן־לזאר.', chips:[['l13','מטרו 13']], aik:'METRO'},
+  {t:'12:00–13:30', h:'צהריים ומנוחה ליד הבית', p:'', chips:[], rest:true, aik:'REST'},
+  {t:'14:00–17:00', key:'d7aft', h:'אחר הצהריים — הבחירה הגדולה', choice:[
+    {h:'עלייה למגדל אייפל', p:'לפי שעת הכרטיס שהזמנתם. מטרו 8 מ־Madeleine ל־École Militaire. קומה 2 מספיקה לילדים; פסגה אם הזמנתם ומזג האוויר מאפשר.', chips:[['l8','מטרו 8'],['book','חובה כרטיס מראש']], m:'Eiffel Tower Paris', dir:true},
+    {h:'המוזיאון שלא בחרתם בחמישי', p:'Paradox או גרווין — מה שנשאר. ממוזג, קרוב, ובלי תלות במזג האוויר. אם הסופות מגיעות — זו הבחירה.', chips:[['walk','ברגל'],['book','כרטיס מראש']], m:'Musée Grévin Paris', dir:true}
+  ]},
+  {t:'17:00–19:00', h:'חזרה, מנוחה ואריזה ראשונה', p:'לארוז את רוב הדברים עכשיו — מחר בבוקר רק סוגרים.', chips:[], rest:true, m:HOME, aik:'PREP'},
+  {t:'19:30–21:45', key:'d7eve', h:'הערב האחרון', choice:[
+    {h:'ערב מונמרט', p:'מטרו 12 מסן־לזאר ישיר ל־Abbesses. פוניקולר או מדרגות לסקרה־קר, שקיעה מהמדרגות (~21:30), כיכר טרטר והציירים. הסיום המושלם — אם אין סופה. עמוס; שימו לב לתיקים.', chips:[['l12','מטרו 12'],['tix','פוניקולר בכרטיס מטרו']], m:'Sacré-Cœur Montmartre Paris'},
+    {h:'ערב רגוע ואריזה', p:'ארוחת ערב אחרונה ליד הדירה, סיבוב קצר לגרנייה המוארת, ואריזה בנחת.', chips:[['walk','ברגל'],['free','חינם']], m:'Palais Garnier Paris'}
+  ]}
+ ]
+},
+{
+ id:'d8', date:'2026-08-04', short:'ג׳', label:'ג׳ 4.8', temp:29,
+ title:'בוקר אחרון וטיסה הביתה',
+ note:'טיסת LY316 ב־17:35 — יש בוקר רגוע אמיתי, אבל היציאה לשדה ב־13:15 אינה גמישה: אל על + אוגוסט = להקדים.',
+ fix:'לתאם עם המארח: שעת צ׳ק־אאוט, ואם היא מוקדמת — השארת מזוודות עד 13:00. את המונית ל־CDG הזמנתם אתמול בערב.',
+ stops:[
+  {t:'07:30–08:15', h:'קפה ומאפה אחרונים ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
+  {t:'08:15–09:15', h:'סגירת מזוודות וצ׳ק־אאוט', p:'בדיקת מגירות וארונות, מתחת למיטות, מטענים, מילוי מים. צ׳ק־אין אונליין לחזור בוצע אתמול.', chips:[], aik:'FLY'},
+  {t:'09:30–12:00', h:'בוקר פרידה רגוע', p:'סיבוב אחרון לפי הרגש: הטווילרי, קפה במדלן, או קניות אחרונות קטנות. להישאר ברדיוס הליכה מהדירה/מהמזוודות.', chips:[['walk','ברגל'],['free','חינם']], m:'Jardin des Tuileries Paris'},
+  {t:'12:00–13:00', h:'ארוחת צהריים קלה ואיסוף מזוודות', p:'', chips:[], aik:'PREP'},
+  {t:'13:15', h:'יציאה ל־CDG', p:'מונית מוזמנת (~45–60 דק׳) — בשדה עד ~14:15, שלוש שעות ורבע לפני ההמראה. תשאול ביטחוני של אל על לוקח זמן. חלופות: Roissybus מ־Opéra או מטרו 14 + RER B.', chips:[['taxi','מונית מוזמנת'],['bus','או Roissybus'],['rerb','או 14+RER B'],['tix','כרטיס Airport']], m:HOME, aik:'CDG', dirs:[['ל־CDG בתח״צ',"8 Rue de l'Arcade Paris",'Charles de Gaulle Airport','transit'],['ל־CDG במונית',"8 Rue de l'Arcade Paris",'Charles de Gaulle Airport','driving']]},
+  {t:'17:35 → 22:55', h:'טיסה LY316 הביתה', p:'נחיתה בנתב״ג 22:55. נסיעה הביתה לצור הדסה — להגיע סביב 00:30.', chips:[['have','כרטיסים קיימים']], aik:'FLY'}
+ ]
+}
+];
+
+const CHECKLIST = [
+ {id:'louvre',  h:'לובר — חמישי 30.7 ב־15:00', p:'הכרטיס קבוע. לוודא שעת סגירה (חמישי ~18:00) ושלילדים יש כרטיס־חינם.', badge:'have', btxt:'כבר קיים', m:'Musée du Louvre Paris', url:'https://ticket.louvre.fr'},
+ {id:'checkin1', h:'צ׳ק־אין אונליין — טיסת הלוך', p:'נפתח 24 שעות לפני 05:40. לכל 4 הנוסעים, לשמור כרטיסי עלייה + PDF לדרייב.', badge:'buy', btxt:'היום', url:'https://www.elal.com'},
+ {id:'ride',    h:'הסעה לנתב״ג — 01:30 מצור הדסה', p:'לוודא שההסעה סגורה ומאושרת, רכב שמתאים ל־4 + מזוודות.', badge:'buy', btxt:'לוודא היום'},
+ {id:'docs',    h:'תיקיית מסמכים ב־Drive — להעלות ולשתף', p:'התיקייה קיימת ומקושרת באפליקציה. להעלות דרכונים+כרטיסים+ביטוח, לשתף עם המשפחה, ולסמן "זמין במצב לא מקוון" בכל טלפון.', badge:'buy', btxt:'היום', url:'https://drive.google.com/drive/folders/1j8_bdjBuxLwMTWlbwlRLEPDRkpplpnXB?usp=drive_link'},
+ {id:'versailles', h:'ורסאי — ראשון 2.8 ב־13:30 (הגעה 13:00)', p:'גישה מלאה לארמון ולגנים. לבדוק אם ה־Grandes Eaux כלולות, וכרטיסי־חינם לילדים.', badge:'have', btxt:'כבר קיים', m:'Château de Versailles', url:'https://en.chateauversailles.fr'},
+ {id:'eiffel',  h:'מגדל אייפל — שני 3.8 אחה״צ', p:'להזמין עכשיו באתר הרשמי בלבד — נמכר ימים קדימה. קומה 2 מספיקה; פסגה אם חשוב.', badge:'buy', btxt:'לקנות מיד', m:'Eiffel Tower Paris', url:'https://www.toureiffel.paris/en'},
+ {id:'stade',   h:'סיור Stade de France — שני 3.8', p:'לבחור סיור בוקר (~09:30) באתר הרשמי.', badge:'buy', btxt:'לקנות עכשיו', m:'Stade de France Saint-Denis', url:'https://www.stadefrance.com/en/tour-pass'},
+ {id:'museum',  h:'מוזיאון חמישי בבוקר — Paradox או גרווין', p:'לפי הבחירה בלו״ז. עדיפות לכרטיס עם ביטול. השני = גיבוי לשני אחה״צ.', badge:'buy', btxt:'אחרי שבוחרים', m:'Musée Grévin Paris', url:'https://www.grevin-paris.com/en'},
+ {id:'cruise',  h:'שיט Vedettes du Pont Neuf — רביעי ~21:00', p:'שיט ערב כדי לתפוס את נצנוץ האייפל ב־22:00.', badge:'buy', btxt:'לקנות עכשיו', m:'Vedettes du Pont Neuf Paris', url:'https://www.vedettesdupontneuf.com'},
+ {id:'arc',     h:'שער הניצחון — תצפית ערב חמישי', p:'אם עולים לגג: לבדוק שעת כניסה אחרונה ולהזמין. קטינים בד״כ חינם.', badge:'opt', btxt:'לפי החלטה', m:'Arc de Triomphe Paris', url:'https://www.paris-arc-de-triomphe.fr/en'},
+ {id:'apt',     h:'תיאום עם המארח', p:'שעת צ׳ק־אין ב־28.7 (מגיעים ~12:00 — לבקש הקדמה/השארת מזוודות) ושעת צ׳ק־אאוט ב־4.8 (לבקש השארת מזוודות עד 13:00).', badge:'buy', btxt:'לתאם היום'},
+ {id:'checkin2', h:'צ׳ק־אין אונליין — טיסת החזור', p:'ב־3.8 אחרי 17:35. לשמור כרטיסי עלייה.', badge:'buy', btxt:'ב־3.8'},
+ {id:'navigo',  h:'Navigo Easy + טעינות', p:'כרטיס לכל נוסע (€2) או בטלפון. בלי Navigo שבועי.', badge:'buy', btxt:'ביום ההגעה'},
+ {id:'taxi',    h:'מונית ל־CDG — ליום היציאה 4.8', p:'להזמין בערב של 3.8 (G7 / Bolt / Uber או דרך המארח). רכב ל־4 + מזוודות, איסוף 13:15.', badge:'buy', btxt:'לתאם ב־3.8'},
+ {id:'citymapper', h:'להתקין Citymapper', p:'לניווט ובדיקת שיבושי RER — לכולם, לפני הטיסה.', badge:'buy', btxt:'לפני הטיסה', url:'https://citymapper.com'}
+];
+
+/* ═══════════ מצב ושמירה ═══════════ */
+const KEY='paris26-checklist', CKEY='paris26-choices', PKEY='paris26-places', DKEY='paris26-docslink';
+let done={}, choices={}, myPlaces=[], storageOk=false;
+
+async function sGet(k){
+  try{ if(window.storage){const r=await window.storage.get(k); if(r&&r.value) return r.value;} }catch(e){}
+  try{ const v=window.localStorage&&localStorage.getItem(k); if(v) return v; }catch(e){}
+  return null;
+}
+async function sSet(k,v){
+  try{ if(window.storage) await window.storage.set(k,v); }catch(e){}
+  try{ if(window.localStorage) localStorage.setItem(k,v); }catch(e){}
+}
+
+async function loadState(){
+  try{ if(window.storage) storageOk=true; }catch(e){}
+  try{ if(window.localStorage){ localStorage.setItem('paris26-test','1'); localStorage.removeItem('paris26-test'); storageOk=true; } }catch(e){}
+  const d=await sGet(KEY);   if(d) try{done=JSON.parse(d);}catch(e){}
+  const c=await sGet(CKEY);  if(c) try{choices=JSON.parse(c);}catch(e){}
+  const p=await sGet(PKEY);  if(p) try{myPlaces=JSON.parse(p);}catch(e){}
+  const dl=await sGet(DKEY); if(dl) setDocsLink(dl,false);
+  document.getElementById('storageNote').textContent = storageOk
+    ? 'הסימונים נשמרים אוטומטית במכשיר הזה.'
+    : 'הסימונים נשמרים למשך הפעלה זו בלבד.';
+  renderChecklist(); renderPlaces(); renderDay();
+}
+
+/* ═══════════ רינדור ═══════════ */
+const daybar=document.getElementById('daybar');
+const dayContent=document.getElementById('dayContent');
+let selDay=0;
+
+function todayIndex(){
+  const now=new Date();
+  const y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,'0'), d=String(now.getDate()).padStart(2,'0');
+  return DAYS.findIndex(x=>x.date===`${y}-${m}-${d}`);
+}
+
+function renderDaybar(){
+  daybar.innerHTML='';
+  const ti=todayIndex();
+  DAYS.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='daychip'+(i===selDay?' sel':'')+(i===ti?' is-today':'');
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i===selDay?'true':'false');
+    b.innerHTML=`<span class="dot" style="background:${HEAT(d.temp)}">${d.short}</span>${d.label}`;
+    b.onclick=()=>{selDay=i;renderDaybar();renderDay();window.scrollTo({top:0});};
+    daybar.appendChild(b);
+  });
+  const sel=daybar.children[selDay];
+  if(sel) sel.scrollIntoView({inline:'center',block:'nearest'});
+}
+
+function chipHTML([cls,txt]){
+  if(cls==='have') return `<span class="chip free">✓ ${txt}</span>`;
+  return `<span class="chip ${cls}">${txt}</span>`;
+}
+
+function mapLinks(o){
+  let out='';
+  if(o.m) out+=`<a class="chip map" href="${G(o.m)}" target="_blank" rel="noopener">${I_MAP} מפה</a>`;
+  if(o.dir&&o.m) out+=`<a class="chip map" href="${GDIR(HOME,o.m,'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>`;
+  if(o.dirs) o.dirs.forEach(arr=>{
+    const [txt,a,b,c]=arr;
+    const from = arr.length===4 ? a : HOME;
+    const to   = arr.length===4 ? b : a;
+    const mode = arr.length===4 ? c : b;
+    out+=`<a class="chip map" href="${GDIR(from,to,mode)}" target="_blank" rel="noopener">${I_ROUTE} ${txt}</a>`;
+  });
+  const ak = o.aik || o.m;
+  if(ak && AIBG[ak]) out+=`<button type="button" class="chip ai" data-aik="${esc(ak)}">${I_AI} תעלומה בזמן</button>`;
+  return out;
+}
+
+function optHTML(o,key,idx){
+  const chosen=choices[key];
+  const cls='optcard'+(chosen===idx?' chosen':(chosen!==undefined?' dim':''));
+  const chips=(o.chips||[]).map(chipHTML).join('')+mapLinks(o);
+  return `<div class="${cls}" role="radio" aria-checked="${chosen===idx}" tabindex="0" data-ck="${key}" data-ci="${idx}">
+    <h4>${o.h}</h4>
+    ${o.p?`<p>${o.p}</p>`:''}
+    ${chips?`<div class="chips">${chips}</div>`:''}
+  </div>`;
+}
+
+function renderDay(){
+  const d=DAYS[selDay];
+  const tempHtml = d.temp==null
+    ? `<div class="temp" style="background:var(--ink-soft)"><b>🇮🇱</b><span>בבית</span></div>`
+    : `<div class="temp" style="background:${HEAT(d.temp)}"><b>${d.temp}°</b><span>משוער</span></div>`;
+  let html=`
+  <div class="dayhead">
+    <div class="row">
+      <h2>${d.label} · ${d.title}</h2>
+      ${tempHtml}
+    </div>
+    <div class="note">${d.note}</div>
+    ${d.fix?`<div class="alert fix">💡 ${d.fix}</div>`:''}
+  </div>
+  <div class="timeline">`;
+  d.stops.forEach(s=>{
+    if(s.choice){
+      html+=`
+      <div class="stop ch">
+        <div class="stopcard">
+          <div class="top"><span class="time">${s.t}</span><h3>${s.h}</h3><span class="choicehead">בחירה</span></div>
+          <div class="optwrap">
+            ${optHTML(s.choice[0],s.key,0)}
+            <div class="ordiv">— או —</div>
+            ${optHTML(s.choice[1],s.key,1)}
+          </div>
+        </div>
+      </div>`;
+    } else {
+      const chips=(s.chips||[]).map(chipHTML).join('')+mapLinks(s);
+      html+=`
+      <div class="stop${s.rest?' rest':''}">
+        <div class="stopcard">
+          <div class="top"><span class="time">${s.t}</span><h3>${s.h}</h3></div>
+          ${s.p?`<p>${s.p}</p>`:''}
+          ${chips?`<div class="chips">${chips}</div>`:''}
+        </div>
+      </div>`;
+    }
+  });
+  html+='</div>';
+  dayContent.innerHTML=html;
+
+  dayContent.querySelectorAll('.optcard').forEach(el=>{
+    const pick=()=>{
+      const k=el.dataset.ck, i=Number(el.dataset.ci);
+      choices[k] = (choices[k]===i) ? undefined : i;
+      if(choices[k]===undefined) delete choices[k];
+      sSet(CKEY, JSON.stringify(choices));
+      renderDay();
+    };
+    el.onclick=e=>{ if(e.target.closest('a,button')) return; pick(); };
+    el.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();pick();} };
+  });
+  bindAi(dayContent);
+}
+
+function renderChecklist(){
+  const wrap=document.getElementById('checklist');
+  wrap.innerHTML='';
+  CHECKLIST.forEach(item=>{
+    const el=document.createElement('div');
+    el.className='checkcard'+(done[item.id]?' done':'');
+    el.setAttribute('role','checkbox');
+    el.setAttribute('tabindex','0');
+    el.setAttribute('aria-checked', done[item.id]?'true':'false');
+    let links='';
+    if(item.url) links+=`<a class="chip map" href="${item.url}" target="_blank" rel="noopener">${I_TIX} אתר הזמנות</a>`;
+    if(item.m) links+=`<a class="chip map" href="${G(item.m)}" target="_blank" rel="noopener">${I_MAP} מפה</a>`;
+    el.innerHTML=`
+      <div class="box">${done[item.id]?'✓':''}</div>
+      <div class="txt">
+        <h3>${item.h}</h3>
+        <p>${item.p}</p>
+        <span class="badge ${item.badge}">${item.btxt}</span>
+        ${links?`<div class="links">${links}</div>`:''}
+      </div>`;
+    const toggle=()=>{done[item.id]=!done[item.id];sSet(KEY,JSON.stringify(done));renderChecklist();};
+    el.onclick=e=>{ if(e.target.closest('a,button')) return; toggle(); };
+    el.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}};
+    wrap.appendChild(el);
+  });
+  const total=CHECKLIST.length;
+  const c=CHECKLIST.filter(i=>done[i.id]).length;
+  document.getElementById('progressText').textContent=`טופלו ${c} מתוך ${total} פריטים`;
+  document.getElementById('progressFill').style.width=(c/total*100)+'%';
+}
+
+/* ═══════════ המקומות שלי ═══════════ */
+function placeQuery(name){
+  return /paris|versailles/i.test(name) ? name : name+', Paris';
+}
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function renderPlaces(){
+  const wrap=document.getElementById('myPlacesList');
+  wrap.innerHTML='';
+  myPlaces.forEach(p=>{
+    const q=placeQuery(p.name);
+    const el=document.createElement('div');
+    el.className='placecard';
+    el.innerHTML=`
+      <div class="txt">
+        <h3>${esc(p.name)}</h3>
+        ${p.note?`<p>${esc(p.note)}</p>`:''}
+        <div class="chips">
+          <a class="chip map" href="${G(q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
+          <a class="chip map" href="${GDIR(HOME,q,'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
+          <button type="button" class="chip ai" data-ai="${esc(p.name)}">${I_AI} תעלומה בזמן</button>
+        </div>
+      </div>
+      <button class="delbtn" aria-label="מחיקת ${esc(p.name)}" data-del="${p.id}">✕</button>`;
+    wrap.appendChild(el);
+  });
+  wrap.querySelectorAll('.delbtn').forEach(b=>{
+    b.onclick=()=>{
+      myPlaces=myPlaces.filter(x=>String(x.id)!==b.dataset.del);
+      sSet(PKEY, JSON.stringify(myPlaces)); renderPlaces();
+    };
+  });
+  bindAi(wrap);
+  document.getElementById('placesEmpty').textContent =
+    myPlaces.length ? 'המקומות נשמרים אוטומטית במכשיר הזה.' : 'עדיין אין מקומות — הוסיפו את הראשון למעלה.';
+}
+document.getElementById('addPlaceBtn').onclick=()=>{
+  const nameEl=document.getElementById('placeName');
+  const noteEl=document.getElementById('placeNote');
+  const name=nameEl.value.trim();
+  if(!name) { nameEl.focus(); return; }
+  myPlaces.push({id:Date.now(), name, note:noteEl.value.trim()});
+  nameEl.value=''; noteEl.value=''; nameEl.focus();
+  sSet(PKEY, JSON.stringify(myPlaces)); renderPlaces();
+};
+document.getElementById('placeNote').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('addPlaceBtn').click();}
+});
+document.getElementById('placeName').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('placeNote').focus();}
+});
+
+/* ═══════════ קישור מסמכים ═══════════ */
+const DEFAULT_DOCS = 'https://drive.google.com/drive/folders/1j8_bdjBuxLwMTWlbwlRLEPDRkpplpnXB?usp=drive_link';
+function setDocsLink(url,save){
+  const wrap=document.getElementById('docsOpenWrap');
+  const btn=document.getElementById('docsOpenBtn');
+  const input=document.getElementById('docsLink');
+  if(url && /^https:\/\//.test(url)){
+    btn.href=url; wrap.style.display='flex'; input.value=url;
+    if(save) sSet(DKEY,url);
+  }
+}
+document.getElementById('saveDocsBtn').onclick=()=>{
+  setDocsLink(document.getElementById('docsLink').value.trim(), true);
+};
+document.getElementById('docsOpenBtn').innerHTML = I_TIX+' פתיחת תיקיית המסמכים';
+setDocsLink(DEFAULT_DOCS, false);
+
+/* קישורי מפה סטטיים */
+document.querySelectorAll('a[data-map]').forEach(a=>{
+  a.href=G(a.dataset.map); a.target='_blank'; a.rel='noopener';
+  a.classList.add('chip','map');
+  a.innerHTML=I_MAP+' '+a.textContent;
+});
+document.querySelectorAll('a[data-route]').forEach(a=>{
+  a.href=GDIR(a.dataset.dirFrom, a.dataset.dirTo, a.dataset.mode||'transit');
+  a.target='_blank'; a.rel='noopener';
+  a.innerHTML=I_ROUTE+' '+a.textContent;
+});
+document.querySelectorAll('.navsvg').forEach(el=>{
+  el.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>';
+});
+
+/* ═══════════ ניווט ═══════════ */
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+    window.scrollTo({top:0});
+  };
+});
+
+/* ═══════════ אתחול ═══════════ */
+const ti=todayIndex();
+if(ti>=0){
+  selDay=ti;
+  const d=DAYS[ti];
+  const banner=document.getElementById('todayBanner');
+  banner.innerHTML = d.temp==null
+    ? `🧳 היום: <b>${d.title}</b> — צ׳ק־אין, דרייב, אריזה ושינה מוקדמת`
+    : `☀️ היום: <b>${d.title}</b> · צפי ${d.temp}° — זכרו מים וכובעים`;
+  banner.classList.add('show');
+}
+renderDaybar();
+renderDay();
+loadState();
+
+/* PWA: עבודה גם בלי אינטרנט כשהאתר מתארח ב-https */
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
