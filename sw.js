@@ -1,4 +1,4 @@
-const CACHE = 'paris26-v5';
+const CACHE = 'paris26-v6';
 const ASSETS = [
   './',
   './index.html',

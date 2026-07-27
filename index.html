@@ -209,6 +209,12 @@ button.chip.ai:active{background:#7A3FA8;color:#fff}
   padding:10px 12px;width:100%;
 }
 .addbox input:focus{outline:2px solid var(--metro);outline-offset:1px;border-color:var(--metro)}
+.addbox select{
+  font-family:"Assistant",sans-serif;font-size:.95rem;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:10px;
+  padding:10px 12px;width:100%;
+}
+.addbox select:focus{outline:2px solid var(--metro);outline-offset:1px;border-color:var(--metro)}
 .addbtn{
   font-family:"Assistant",sans-serif;font-weight:700;font-size:.95rem;
   background:var(--metro);color:#fff;border:none;border-radius:10px;
@@ -320,15 +326,26 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <section class="panel" id="panel-places">
   <div class="infocard">
     <h3><span class="navsvg"></span>המקומות שלנו</h3>
-    <p>הרשימה של מירית מגוגל מפות + כל מה שתוסיפו כאן. לכל מקום: מפה, מסלול מהדירה ו"מצא אותו עכשיו" מהמיקום הנוכחי. אפשר לסנן לפי מי שהוסיף.</p>
+    <p>הרשימה של מירית, כל המקומות מהלו״ז, וכל מה שתוסיפו כאן. לכל מקום: מפה, מסלול מהדירה ו"מצא אותו עכשיו" מהמיקום הנוכחי. שתי שורות סינון — לפי מי שהוסיף ולפי נושא.</p>
     <div class="addbox">
       <input type="text" id="placeName" placeholder="שם המקום (למשל: Berthillon)" maxlength="80">
       <input type="text" id="placeNote" placeholder="הערה (אופציונלי: גלידה מפורסמת, ליד הדירה...)" maxlength="120">
       <input type="text" id="placeBy" placeholder="מי מוסיף? (למשל: יריב)" maxlength="30">
+      <select id="placeTag">
+        <option value="">נושא (אופציונלי)</option>
+        <option>אתרים</option>
+        <option>מוזיאונים</option>
+        <option>פארקים</option>
+        <option>אוכל</option>
+        <option>קפה ומתוקים</option>
+        <option>קניות</option>
+        <option>חוויות</option>
+      </select>
       <button id="addPlaceBtn" class="addbtn">+ הוסף מקום</button>
     </div>
   </div>
   <div class="filterrow" id="placeFilter"></div>
+  <div class="filterrow" id="topicFilter"></div>
   <div id="myPlacesList"></div>
   <p class="storage-note" id="placesEmpty"></p>
 </section>
@@ -942,29 +959,38 @@ function placeQuery(name){
 function esc(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-let placeFilter='הכל';
+let placeFilter='הכל', topicFilter='הכל';
 function allPlaces(){
-  const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', fixed:false}));
-  const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', fixed:true}));
-  return users.concat(mirit);
+  const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', tag:p.tag||'', fixed:false}));
+  const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', tag:p.tag||'', fixed:true}));
+  const trip=TRIP.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מסלול', tag:p.tag||'', fixed:true}));
+  return users.concat(mirit, trip);
 }
 function renderPlaces(){
   const wrap=document.getElementById('myPlacesList');
   const all=allPlaces();
   const names=[...new Set(all.map(p=>p.by).filter(Boolean))];
+  const tags=[...new Set(all.map(p=>p.tag).filter(Boolean))];
   if(placeFilter!=='הכל' && !names.includes(placeFilter)) placeFilter='הכל';
+  if(topicFilter!=='הכל' && !tags.includes(topicFilter)) topicFilter='הכל';
   const frow=document.getElementById('placeFilter');
   frow.innerHTML=['הכל',...names].map(n=>
     `<button type="button" class="daychip${placeFilter===n?' sel':''}" data-f="${esc(n)}">${esc(n)}</button>`).join('');
   frow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ placeFilter=b.dataset.f; renderPlaces(); }; });
-  const list = placeFilter==='הכל' ? all : all.filter(p=>p.by===placeFilter);
+  const trow=document.getElementById('topicFilter');
+  trow.innerHTML=['הכל',...tags].map(t=>
+    `<button type="button" class="daychip${topicFilter===t?' sel':''}" data-f="${esc(t)}">${esc(t)}</button>`).join('');
+  trow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ topicFilter=b.dataset.f; renderPlaces(); }; });
+  const list = all.filter(p=>
+    (placeFilter==='הכל' || p.by===placeFilter) &&
+    (topicFilter==='הכל' || p.tag===topicFilter));
   wrap.innerHTML='';
   list.forEach(p=>{
     const el=document.createElement('div');
     el.className='placecard';
     el.innerHTML=`
       <div class="txt">
-        <h3>${esc(p.name)}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}</h3>
+        <h3>${esc(p.name)}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}${p.tag?`<span class="byline">${esc(p.tag)}</span>`:''}</h3>
         ${p.note?`<p>${esc(p.note)}</p>`:''}
         <div class="chips">
           <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
@@ -990,9 +1016,10 @@ document.getElementById('addPlaceBtn').onclick=()=>{
   const nameEl=document.getElementById('placeName');
   const noteEl=document.getElementById('placeNote');
   const byEl=document.getElementById('placeBy');
+  const tagEl=document.getElementById('placeTag');
   const name=nameEl.value.trim();
   if(!name) { nameEl.focus(); return; }
-  myPlaces.push({id:Date.now(), name, note:noteEl.value.trim(), by:byEl.value.trim()});
+  myPlaces.push({id:Date.now(), name, note:noteEl.value.trim(), by:byEl.value.trim(), tag:tagEl.value});
   nameEl.value=''; noteEl.value=''; nameEl.focus();
   sSet(PKEY, JSON.stringify(myPlaces)); renderPlaces();
 };
@@ -1052,27 +1079,51 @@ document.getElementById('todoText').addEventListener('keydown',e=>{
 /* רשימה קבועה מתוך השמורים של מירית בגוגל מפות. mode:'transit' למקומות רחוקים מדי להליכה. */
 const MIRIT=[
  {n:'107 Rue de Rivoli', q:'107 Rue de Rivoli, 75001 Paris', d:'כתובת שמורה — רובע 1, ליד הלובר'},
- {n:'Merci', q:'Merci concept store Paris', d:'קונספט־סטור במארה · ★ 4.1'},
- {n:'Fromagerie Laurent Dubois', q:'Fromagerie Laurent Dubois Paris', d:'חנות גבינות · ★ 4.5'},
- {n:'Jade Genin', q:'Jade Genin chocolat Paris', d:'שוקולד בעבודת יד · ★ 4.6 · €10–50'},
- {n:'PLAQ Chocolat', q:'PLAQ Chocolat Paris', d:'חנות שוקולד · ★ 4.5'},
- {n:'Mamiche', q:'Mamiche boulangerie Paris', d:'מאפייה · ★ 4.6 · €1–10 · שני סניפים — המפה תציג את הקרוב'},
- {n:'Brigat\'', q:'Brigat\' patisserie Paris', d:'פטיסרי · ★ 4.7'},
- {n:'מוזיאון המדע והתעשייה', q:'Cité des Sciences et de l\'Industrie Paris', d:'מוזיאון מדע · ★ 3.8 · פארק לה־וילט', mode:'transit'},
- {n:'Carrefour City', q:'Carrefour City Madeleine Paris', d:'סופרמרקט · ★ 4.2'},
- {n:'Monoprix', q:'Monoprix 47 Boulevard Malesherbes Paris', d:'סופרמרקט · הסניף של קניות שישי (47 Bd Malesherbes)'},
- {n:'פאלה רויאל', q:'Palais Royal Paris', d:'ציון דרך תרבותי · ★ 4.6 · גנים ועמודים מפוספסים'},
- {n:'Papier Tigre', q:'Papier Tigre Paris', d:'חנות מכשירי כתיבה · ★ 4.6'},
- {n:'Café Verlet', q:'Café Verlet Paris', d:'בית קפה · ★ 4.3 · €10–20'},
- {n:'Noir Coffee Shop – Madeleine', q:'Noir Coffee Shop Madeleine Paris', d:'בית קפה · ★ 4.5 · €1–10 · ממש ליד הדירה'},
- {n:'מונמארטר', q:'Montmartre Paris', d:'השכונה — מתוכננת כערב בלו״ז', mode:'transit'},
- {n:'Cedric Grolet Opéra', q:'Cedric Grolet Opéra Paris', d:'מאפים · ★ 3.4'},
- {n:'Fleux', q:'Fleux Paris', d:'חנות הכל לבית · ★ 4.0'},
+ {n:'Merci', q:'Merci concept store Paris', d:'קונספט־סטור במארה · ★ 4.1', tag:'קניות'},
+ {n:'Fromagerie Laurent Dubois', q:'Fromagerie Laurent Dubois Paris', d:'חנות גבינות · ★ 4.5', tag:'אוכל'},
+ {n:'Jade Genin', q:'Jade Genin chocolat Paris', d:'שוקולד בעבודת יד · ★ 4.6 · €10–50', tag:'קפה ומתוקים'},
+ {n:'PLAQ Chocolat', q:'PLAQ Chocolat Paris', d:'חנות שוקולד · ★ 4.5', tag:'קפה ומתוקים'},
+ {n:'Mamiche', q:'Mamiche boulangerie Paris', d:'מאפייה · ★ 4.6 · €1–10 · שני סניפים — המפה תציג את הקרוב', tag:'קפה ומתוקים'},
+ {n:'Brigat\'', q:'Brigat\' patisserie Paris', d:'פטיסרי · ★ 4.7', tag:'קפה ומתוקים'},
+ {n:'מוזיאון המדע והתעשייה', q:'Cité des Sciences et de l\'Industrie Paris', d:'מוזיאון מדע · ★ 3.8 · פארק לה־וילט', mode:'transit', tag:'מוזיאונים'},
+ {n:'Carrefour City', q:'Carrefour City Madeleine Paris', d:'סופרמרקט · ★ 4.2', tag:'קניות'},
+ {n:'Monoprix', q:'Monoprix 47 Boulevard Malesherbes Paris', d:'סופרמרקט · הסניף של קניות שישי (47 Bd Malesherbes)', tag:'קניות'},
+ {n:'פאלה רויאל', q:'Palais Royal Paris', d:'ציון דרך תרבותי · ★ 4.6 · גנים ועמודים מפוספסים', tag:'אתרים'},
+ {n:'Papier Tigre', q:'Papier Tigre Paris', d:'חנות מכשירי כתיבה · ★ 4.6', tag:'קניות'},
+ {n:'Café Verlet', q:'Café Verlet Paris', d:'בית קפה · ★ 4.3 · €10–20', tag:'קפה ומתוקים'},
+ {n:'Noir Coffee Shop – Madeleine', q:'Noir Coffee Shop Madeleine Paris', d:'בית קפה · ★ 4.5 · €1–10 · ממש ליד הדירה', tag:'קפה ומתוקים'},
+ {n:'מונמארטר', q:'Montmartre Paris', d:'השכונה — מתוכננת כערב בלו״ז', mode:'transit', tag:'אתרים'},
+ {n:'Cedric Grolet Opéra', q:'Cedric Grolet Opéra Paris', d:'מאפים · ★ 3.4', tag:'קפה ומתוקים'},
+ {n:'Fleux', q:'Fleux Paris', d:'חנות הכל לבית · ★ 4.0', tag:'קניות'},
  {n:'18 Rue Tiquetonne', q:'18 Rue Tiquetonne, 75002 Paris', d:'כתובת שמורה — רובע 2'},
- {n:'Uniqlo', q:'Uniqlo Paris', d:'חנות בגדים · ★ 4.1'},
- {n:'Fellows Faubourg St-Denis', q:'Fellows Faubourg Saint-Denis Paris', d:'מסעדה צמחונית · ★ 4.9 · €10–20'},
- {n:'גלריית איבון למבר', q:'Librairie Yvon Lambert Paris', d:'חנות ספרים וגלריה · ★ 4.8'},
- {n:'DAARK³', q:'DAARK coffee Paris', d:'בית קפה · ★ 4.8 · €1–10'}
+ {n:'Uniqlo', q:'Uniqlo Paris', d:'חנות בגדים · ★ 4.1', tag:'קניות'},
+ {n:'Fellows Faubourg St-Denis', q:'Fellows Faubourg Saint-Denis Paris', d:'מסעדה צמחונית · ★ 4.9 · €10–20', tag:'אוכל'},
+ {n:'גלריית איבון למבר', q:'Librairie Yvon Lambert Paris', d:'חנות ספרים וגלריה · ★ 4.8', tag:'קניות'},
+ {n:'DAARK³', q:'DAARK coffee Paris', d:'בית קפה · ★ 4.8 · €1–10', tag:'קפה ומתוקים'}
+];
+
+/* מקומות מתוך הלו״ז היומי (ללא כפילויות עם רשימת מירית) */
+const TRIP=[
+ {n:'גני הטווילרי', q:'Jardin des Tuileries Paris', d:'הגנים בין הלובר לקונקורד — קרוסלה וסירות מפרש לילדים', tag:'פארקים'},
+ {n:'כנסיית המדלן', q:'La Madeleine Paris', d:'הכנסייה השכנה — 2 דק׳ מהדירה', tag:'אתרים'},
+ {n:'כיכר הקונקורד', q:'Place de la Concorde Paris', d:'בדרך מהמדלן לטווילרי', tag:'אתרים'},
+ {n:'אופרה גרנייה', q:'Palais Garnier Paris', d:'מוארת יפה בערב — 8 דק׳ מהדירה', tag:'אתרים'},
+ {n:'גשר אלכסנדר השלישי', q:'Pont Alexandre III Paris', d:'הגשר המפואר בפריז — בטיול השבת לאורך הסן', tag:'אתרים'},
+ {n:'סקרה־קר ומונמרט', q:'Sacré-Cœur Montmartre Paris', d:'הבזיליקה, המדרגות והשקיעה — מתוכנן כערב', tag:'אתרים', mode:'transit'},
+ {n:'הלובר', q:'Musée du Louvre Paris', d:'חמישי 30.7 ב־15:00 — כרטיס קיים', tag:'מוזיאונים'},
+ {n:'Paradox Museum', q:'Paradox Museum Paris', d:'מוזיאון אשליות אינטראקטיבי — 10–12 דק׳ מהדירה', tag:'מוזיאונים'},
+ {n:'מוזיאון השעווה גרווין', q:'Musée Grévin Paris', d:'מוזיאון השעווה בפסאז׳ מפואר', tag:'מוזיאונים'},
+ {n:'שער הניצחון', q:'Arc de Triomphe Paris', d:'ערב חמישי — תצפית מהגג או מבחוץ', tag:'אתרים'},
+ {n:'חנות PSG', q:'PSG Store 92 Avenue des Champs-Élysées Paris', d:'חנות הדגל בשאנז אליזה — עצירת חובה בערב חמישי', tag:'קניות'},
+ {n:'גלרי לפאייט', q:'Galeries Lafayette Haussmann Paris', d:'הכיפה המפוארת וגג תצפית חינמי', tag:'קניות'},
+ {n:'Marin Montagut', q:'Marin Montagut Paris', d:'חנות קטנה ומעוצבת — כלי בית ומזכרות', tag:'קניות'},
+ {n:'שיט Vedettes du Pont Neuf', q:'Vedettes du Pont Neuf Paris', d:'שיט ערב על הסן — רביעי ~21:00', tag:'חוויות'},
+ {n:'ארמון ורסאי', q:'Château de Versailles', d:'ראשון 2.8 ב־13:30 — כרטיס גישה מלאה', tag:'אתרים', mode:'transit'},
+ {n:'גני ורסאי', q:'Gardens of Versailles', d:'מדשאות, חורשות ותעלות — בכרטיס המלא', tag:'פארקים', mode:'transit'},
+ {n:'טריאנון והכפר של מארי אנטואנט', q:'Hameau de la Reine Versailles', d:'הארמונות הקטנים והכפר הכפרי — קסום לילדים', tag:'אתרים', mode:'transit'},
+ {n:'שוק Marché Notre-Dame ורסאי', q:'Marché Notre-Dame Versailles', d:'שוק ראשון בבוקר — דוכנים וביתני אוכל', tag:'אוכל', mode:'transit'},
+ {n:'Stade de France', q:'Stade de France Saint-Denis', d:'סיור באצטדיון הלאומי — שני בבוקר', tag:'חוויות', mode:'transit'},
+ {n:'מגדל אייפל', q:'Eiffel Tower Paris', d:'אופציה לשני אחה״צ — חובה כרטיס מראש', tag:'אתרים', mode:'transit'}
 ];
 
 /* ═══════════ קישור מסמכים ═══════════ */
