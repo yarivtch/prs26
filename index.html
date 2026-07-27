@@ -1462,6 +1462,15 @@ loadState();
 
 /* PWA: עבודה גם בלי אינטרנט כשהאתר מתארח ב-https */
 if('serviceWorker' in navigator && location.protocol==='https:'){
+  /* רענון אוטומטי פעם אחת כשגרסה חדשה תופסת שליטה — בלי זה רואים גרסה
+     ישנה מהמטמון עד סגירה ופתיחה נוספת. hadSW מונע רענון בביקור הראשון. */
+  const hadSW = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloaded || !hadSW) return;
+    reloaded = true;
+    location.reload();
+  });
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 </script>
