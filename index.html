@@ -574,6 +574,8 @@ function bindAi(root){
 /* ═══════════ עזרי מפה ═══════════ */
 const G = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
 const GDIR = (from,to,mode) => 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(from) + '&destination=' + encodeURIComponent(to) + '&travelmode=' + (mode||'walking');
+/* בלי origin — גוגל מפות מנווט מהמיקום הנוכחי של המכשיר */
+const GDIRNOW = (to,mode) => 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(to) + '&travelmode=' + (mode||'walking');
 const HOME = "8 Rue de l'Arcade, 75008 Paris";
 
 const HEAT = t => t==null?'var(--ink-soft)':t>=38?'var(--heat-extreme)':t>=36?'var(--heat-hot)':t>=33?'var(--heat-warm)':'var(--heat-ok)';
@@ -1069,6 +1071,7 @@ function renderMirit(){
         <div class="chips">
           <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
           <a class="chip map" href="${GDIR(HOME,p.q,p.mode||'walking')}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
+          <a class="chip map" href="${GDIRNOW(p.q,p.mode||'walking')}" target="_blank" rel="noopener">📍 מצא אותו עכשיו</a>
         </div>
       </div>
     </div>`).join('');
