@@ -257,7 +257,7 @@ nav button{
   background:none;border:none;color:#B9C6E2;cursor:pointer;
   font-family:"Assistant",sans-serif;font-weight:600;font-size:.72rem;
   display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:5px 9px;border-radius:10px;
+  padding:5px 6px;border-radius:10px;
 }
 nav button .ico{font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;height:18px}
 nav button.sel{color:#fff;background:rgba(255,255,255,.13)}
@@ -298,6 +298,20 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   </div>
   <div id="checklist"></div>
   <p class="storage-note" id="storageNote"></p>
+</section>
+
+<!-- ════════ משימות ════════ -->
+<section class="panel" id="panel-todos">
+  <div class="infocard">
+    <h3>📝 משימות</h3>
+    <p>סמנו מה בוצע, מחקו מה שכבר לא רלוונטי, והוסיפו משימות חדשות.</p>
+    <div class="addbox">
+      <input type="text" id="todoText" placeholder="משימה חדשה" maxlength="120">
+      <button id="addTodoBtn" class="addbtn">+ הוסף משימה</button>
+    </div>
+  </div>
+  <div id="todoList"></div>
+  <p class="storage-note" id="todosNote"></p>
 </section>
 
 <!-- ════════ המקומות שלי ════════ -->
@@ -475,6 +489,7 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <nav aria-label="ניווט ראשי">
   <button class="sel" data-panel="days"><span class="ico">🚇</span>לו״ז</button>
   <button data-panel="tickets"><span class="ico">🎟️</span>כרטיסים</button>
+  <button data-panel="todos"><span class="ico">📝</span>משימות</button>
   <button data-panel="places"><span class="ico navsvg"></span>מקומות</button>
   <button data-panel="mirit"><span class="ico">📌</span>מירית</button>
   <button data-panel="transport"><span class="ico">🗺️</span>תחבורה</button>
@@ -743,8 +758,15 @@ const CHECKLIST = [
 ];
 
 /* ═══════════ מצב ושמירה ═══════════ */
-const KEY='paris26-checklist', CKEY='paris26-choices', PKEY='paris26-places', DKEY='paris26-docslink';
+const KEY='paris26-checklist', CKEY='paris26-choices', PKEY='paris26-places', DKEY='paris26-docslink', TKEY='paris26-todos';
 let done={}, choices={}, myPlaces=[], storageOk=false;
+let todos=[
+  {id:1, text:'לקחת כלי רחצה', done:false},
+  {id:2, text:'לאסוף פספורטכרד', done:false},
+  {id:3, text:'לאסוף כסף', done:false},
+  {id:4, text:'לקנות לנגה אוזניות', done:false},
+  {id:5, text:'לקנות לנתי קאמל צהוב', done:false}
+];
 
 async function sGet(k){
   try{ if(window.storage){const r=await window.storage.get(k); if(r&&r.value) return r.value;} }catch(e){}
@@ -762,11 +784,12 @@ async function loadState(){
   const d=await sGet(KEY);   if(d) try{done=JSON.parse(d);}catch(e){}
   const c=await sGet(CKEY);  if(c) try{choices=JSON.parse(c);}catch(e){}
   const p=await sGet(PKEY);  if(p) try{myPlaces=JSON.parse(p);}catch(e){}
+  const t=await sGet(TKEY);  if(t) try{todos=JSON.parse(t);}catch(e){}
   const dl=await sGet(DKEY); if(dl) setDocsLink(dl,false);
   document.getElementById('storageNote').textContent = storageOk
     ? 'הסימונים נשמרים אוטומטית במכשיר הזה.'
     : 'הסימונים נשמרים למשך הפעלה זו בלבד.';
-  renderChecklist(); renderPlaces(); renderDay();
+  renderChecklist(); renderPlaces(); renderTodos(); renderDay();
 }
 
 /* ═══════════ רינדור ═══════════ */
@@ -967,6 +990,48 @@ document.getElementById('placeNote').addEventListener('keydown',e=>{
 });
 document.getElementById('placeName').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();document.getElementById('placeNote').focus();}
+});
+
+/* ═══════════ משימות ═══════════ */
+function renderTodos(){
+  const wrap=document.getElementById('todoList');
+  wrap.innerHTML='';
+  todos.forEach(td=>{
+    const el=document.createElement('div');
+    el.className='checkcard'+(td.done?' done':'');
+    el.setAttribute('role','checkbox');
+    el.setAttribute('aria-checked',td.done);
+    el.tabIndex=0;
+    el.innerHTML=`
+      <div class="box">${td.done?'✓':''}</div>
+      <div class="txt"><h3>${esc(td.text)}</h3></div>
+      <button class="delbtn" aria-label="מחיקת ${esc(td.text)}" data-del="${td.id}">✕</button>`;
+    const toggle=()=>{ td.done=!td.done; sSet(TKEY,JSON.stringify(todos)); renderTodos(); };
+    el.onclick=e=>{ if(e.target.closest('.delbtn')) return; toggle(); };
+    el.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); } };
+    wrap.appendChild(el);
+  });
+  wrap.querySelectorAll('.delbtn').forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      todos=todos.filter(x=>String(x.id)!==b.dataset.del);
+      sSet(TKEY,JSON.stringify(todos)); renderTodos();
+    };
+  });
+  const c=todos.filter(t=>t.done).length;
+  document.getElementById('todosNote').textContent =
+    todos.length ? `בוצעו ${c} מתוך ${todos.length} · המשימות נשמרות אוטומטית במכשיר הזה.` : 'אין משימות — הכל בוצע 🎉';
+}
+document.getElementById('addTodoBtn').onclick=()=>{
+  const inp=document.getElementById('todoText');
+  const text=inp.value.trim();
+  if(!text){ inp.focus(); return; }
+  todos.push({id:Date.now(), text, done:false});
+  inp.value=''; inp.focus();
+  sSet(TKEY,JSON.stringify(todos)); renderTodos();
+};
+document.getElementById('todoText').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ e.preventDefault(); document.getElementById('addTodoBtn').click(); }
 });
 
 /* ═══════════ המקומות של מירית ═══════════ */
