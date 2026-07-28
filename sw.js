@@ -1,4 +1,4 @@
-const CACHE = 'paris26-v16';
+const CACHE = 'paris26-v17';
 const ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,11 @@ const ASSETS = [
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      // cache:'reload' — להוריד מהרשת ולא ממטמון ה-HTTP של הדפדפן,
+      // אחרת עדכון עלול לקבור עותק ישן של index.html בתוך המטמון החדש
+      .then(c => c.addAll(ASSETS.map(u => new Request(u, {cache: 'reload'}))))
+      .then(() => self.skipWaiting())
   );
 });
 
