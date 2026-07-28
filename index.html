@@ -272,6 +272,11 @@ button.chip.ai:active{background:#7A3FA8;color:#fff}
   margin-inline-start:6px;vertical-align:1px;color:var(--metro);
 }
 .saybtn:active{border-color:var(--metro);background:var(--paper)}
+.chip.visit{
+  cursor:pointer;background:none;border:1.5px solid var(--line);
+  color:var(--ink-soft);font-family:"Assistant",sans-serif;
+}
+.chip.visit.on{background:#E7EFE9;border-color:var(--heat-ok);color:var(--heat-ok)}
 #phrasebook details{border-bottom:1px solid var(--line);padding:2px 0}
 #phrasebook details:last-child{border-bottom:none}
 #phrasebook summary{font-weight:700;color:var(--metro-deep);cursor:pointer;padding:8px 0;font-size:.95rem}
@@ -1055,8 +1060,8 @@ const CHECKLIST = [
 ];
 
 /* ═══════════ מצב ושמירה ═══════════ */
-const KEY='paris26-checklist', CKEY='paris26-choices', PKEY='paris26-places', DKEY='paris26-docslink', TKEY='paris26-todos';
-let done={}, choices={}, myPlaces=[], storageOk=false;
+const KEY='paris26-checklist', CKEY='paris26-choices', PKEY='paris26-places', DKEY='paris26-docslink', TKEY='paris26-todos', VKEY='paris26-visited';
+let done={}, choices={}, myPlaces=[], visited={}, storageOk=false;
 let todos=[
   {id:1, text:'לקחת כלי רחצה', done:false},
   {id:2, text:'לאסוף פספורטכרד', done:false},
@@ -1082,6 +1087,7 @@ async function loadState(){
   const c=await sGet(CKEY);  if(c) try{choices=JSON.parse(c);}catch(e){}
   const p=await sGet(PKEY);  if(p) try{myPlaces=JSON.parse(p);}catch(e){}
   const t=await sGet(TKEY);  if(t) try{todos=JSON.parse(t);}catch(e){}
+  const v=await sGet(VKEY);  if(v) try{visited=JSON.parse(v);}catch(e){}
   const dl=await sGet(DKEY); if(dl) setDocsLink(dl,false);
   document.getElementById('storageNote').textContent = storageOk
     ? 'הסימונים נשמרים אוטומטית במכשיר הזה.'
@@ -1276,18 +1282,21 @@ function renderPlaces(){
   const names=[...new Set(all.map(p=>p.by).filter(Boolean))];
   const tags=[...new Set(all.flatMap(p=>[p.tag,...p.x]).filter(Boolean))];
   if(placeFilter!=='הכל' && !names.includes(placeFilter)) placeFilter='הכל';
-  if(topicFilter!=='הכל' && !tags.includes(topicFilter)) topicFilter='הכל';
+  if(topicFilter!=='הכל' && topicFilter!=='✔ היינו' && !tags.includes(topicFilter)) topicFilter='הכל';
   const frow=document.getElementById('placeFilter');
   frow.innerHTML=['הכל',...names].map(n=>
     `<button type="button" class="daychip${placeFilter===n?' sel':''}" data-f="${esc(n)}">${esc(n)}</button>`).join('');
   frow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ placeFilter=b.dataset.f; renderPlaces(); }; });
   const trow=document.getElementById('topicFilter');
-  trow.innerHTML=['הכל',...tags].map(t=>
+  trow.innerHTML=['הכל',...tags,'✔ היינו'].map(t=>
     `<button type="button" class="daychip${topicFilter===t?' sel':''}" data-f="${esc(t)}">${esc(t)}</button>`).join('');
   trow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ topicFilter=b.dataset.f; renderPlaces(); }; });
-  const list = all.filter(p=>
-    (placeFilter==='הכל' || p.by===placeFilter) &&
-    (topicFilter==='הכל' || p.tag===topicFilter || p.x.includes(topicFilter)));
+  const list = all.filter(p=>{
+    if(placeFilter!=='הכל' && p.by!==placeFilter) return false;
+    if(topicFilter==='הכל') return true;
+    if(topicFilter==='✔ היינו') return !!visited[p.q];
+    return p.tag===topicFilter || p.x.includes(topicFilter);
+  });
   wrap.innerHTML='';
   list.forEach(p=>{
     const el=document.createElement('div');
@@ -1301,6 +1310,7 @@ function renderPlaces(){
           <a class="chip map" href="${GDIR(HOME,p.q,p.mode)}" target="_blank" rel="noopener">${I_ROUTE} מסלול מהדירה</a>
           <a class="chip map" href="${GDIRNOW(p.q,p.mode)}" target="_blank" rel="noopener">📍 מצא אותו עכשיו</a>
           <button type="button" class="chip ai" data-aik="${esc(p.q)}" data-ai="${esc(p.name)}">${I_AI} תעלומה בזמן</button>
+          <button type="button" class="chip visit${visited[p.q]?' on':''}" data-v="${esc(p.q)}">${visited[p.q]?'✔ היינו!':'היינו כאן?'}</button>
         </div>
       </div>
       ${p.fixed?'':`<button class="delbtn" aria-label="מחיקת ${esc(p.name)}" data-del="${p.id}">✕</button>`}`;
@@ -1315,9 +1325,19 @@ function renderPlaces(){
   wrap.querySelectorAll('.saybtn').forEach(b=>{
     b.onclick=e=>{ e.stopPropagation(); speakFr(b.dataset.say); };
   });
+  wrap.querySelectorAll('.chip.visit').forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      const q=b.dataset.v;
+      if(visited[q]) delete visited[q]; else visited[q]=Date.now();
+      sSet(VKEY, JSON.stringify(visited)); renderPlaces();
+    };
+  });
   bindAi(wrap);
+  const vCount=Object.keys(visited).length;
   document.getElementById('placesEmpty').textContent =
-    myPlaces.length ? 'המקומות שהוספתם נשמרים אוטומטית במכשיר הזה.' : 'הוסיפו מקומות משלכם עם כפתור ה־+ הצף למטה.';
+    (vCount ? `סימנתם ${vCount} מקומות שהייתם בהם — הסינון "✔ היינו" מציג את כולם. ` : '') +
+    (myPlaces.length ? 'המקומות שהוספתם נשמרים אוטומטית במכשיר הזה.' : 'הוסיפו מקומות משלכם עם כפתור ה־+ הצף למטה.');
 }
 document.getElementById('addPlaceBtn').onclick=()=>{
   const nameEl=document.getElementById('placeName');
