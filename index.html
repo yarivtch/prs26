@@ -914,15 +914,19 @@ const DAYS = [
 },
 {
  id:'d2', date:'2026-07-29', short:'ד׳', label:'ד׳ 29.7', temp:38,
- title:'עיצוב ונייר בבוקר + שיט ערב',
- note:'היום החם ביותר. פעילות בחוץ רק בבוקר מוקדם ובערב; את הצהריים מעבירים במיזוג. אם נשחקים בבוקר — Papier Tigre הוא הוויתור הטבעי.',
+ title:'בוקר מארה + שיט ערב',
+ note:'היום החם ביותר (38°). מסלול המארה בבוקר — ~2 ק״מ ברגל, מסיימים עד ~13:30 וחוזרים למיזוג. אם נשחקים — מוותרים על Laurent Dubois ומקצרים.',
  stops:[
-  {t:'08:15', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
-  {t:'09:00', h:'Merci', p:'חנות קונספט גדולה במארה. 45–60 דקות. מטרו 8 ישיר מ־Madeleine ל־Saint-Sébastien–Froissart.', chips:[['l8','מטרו 8'],['free','חינם']], m:'Merci concept store 111 Boulevard Beaumarchais Paris', dir:true},
-  {t:'10:15', h:'Marin Montagut', p:'חנות קטנה ומעוצבת: כלי בית מצוירים ומזכרות לא־תיירותיות.', chips:[['taxi','מונית קצרה'],['free','חינם']], m:'Marin Montagut Paris'},
-  {t:'11:10', h:'Papier Tigre', p:'נייר וכלי כתיבה. הוויתור הטבעי אם נשחקים.', chips:[['taxi','מונית קצרה'],['free','חינם']], m:'Papier Tigre Paris'},
-  {t:'12:00–13:00', h:'חזרה וצהריים בדירה', p:'', chips:[['taxi','מונית'],['l8','או מטרו 8']], rest:true, aik:'REST'},
-  {t:'13:00–19:30', key:'d2mid', h:'צהריים ב־38° — איפה מעבירים?', choice:[
+  {t:'08:30', h:'מטרו 8 למארה', p:'מ־Madeleine (3 דק׳ מהדירה) ישיר ל־Filles du Calvaire — ~15 דק׳, בלי החלפות. מכאן כל המסלול ברגל.', chips:[['l8','מטרו 8'],['tix','€2.55']], dirs:[['לתחילת המסלול בתח״צ','Season Marais Paris','transit']], aik:'METRO'},
+  {t:'08:50–10:15', h:'☕ ארוחת בוקר — Season Marais', p:'פתיחת המסלול בקפה במארה העילי. משם הכול הליכה קצרה ברחובות היפים.', chips:[['walk','ברגל'],['tix','לבדוק שעות פתיחה']], m:'Season Marais Paris', aik:'CAFE'},
+  {t:'10:30', h:'Merci', p:'חנות הקונספט הגדולה — חפשו את הפיאט האדומה בחצר. נפתחת בסביבות 10:30.', chips:[['walk','5 דק׳'],['free','חינם']], m:'Merci concept store 111 Boulevard Beaumarchais Paris'},
+  {t:'11:15', h:'Papier Tigre + גלריית איבון למבר', p:'שתיהן ברחוב Filles du Calvaire, שתי דקות זו מזו — נייר, ספרים ואמנות.', chips:[['walk','3 דק׳'],['free','חינם']], m:'Papier Tigre Paris'},
+  {t:'11:45', h:'☕ הפסקת אספרסו — Boot Café', p:'בית קפה זעיר ומצולם בחזית סנדלרייה ישנה, ממש ליד. קצר וטעים.', chips:[['walk','2 דק׳']], m:'Boot Café Paris', aik:'CAFE'},
+  {t:'12:05', h:'Fleux', p:'חנות העיצוב לבית — יורדים דרומה ללב המארה.', chips:[['walk','10 דק׳'],['free','חינם']], m:'Fleux Paris'},
+  {t:'12:35', h:'🥙 צהריים — L\'As du Fallafel', p:'הפלאפל הכשר המפורסם ברחוב רוזייה, 3 דק׳ מ־Fleux. חלופה באותו רחוב: King Falafel Palace.', chips:[['walk','3 דק׳'],['tix','מזומן מהיר בדוכן']], m:'L\'As du Fallafel Paris'},
+  {t:'13:05', h:'🧀 Laurent Dubois — אם נשאר כוח', p:'חנות הגבינות מהרשימה של מירית. אופציונלי לגמרי ביום של 38°.', chips:[['walk','ברגל'],['free','אופציונלי']], m:'Fromagerie Laurent Dubois Paris'},
+  {t:'~13:30', h:'חזרה הביתה למיזוג', p:'מטרו 1 מ־Saint-Paul עד Concorde + 10 דק׳ הליכה, או מונית. לא מתעכבים — החום בשיא.', chips:[['l1','מטרו 1'],['taxi','או מונית']], m:HOME, aik:'METRO'},
+  {t:'13:30–19:30', key:'d2mid', h:'צהריים ב־38° — איפה מעבירים?', choice:[
     {h:'מנוחה מלאה בדירה', p:'מיזוג, שינה, משחקים. האופציה הבטוחה ביום הכי חם, לפני ערב עם שיט.', chips:[['free','חינם']], aik:'REST'},
     {h:'גלרי לפאייט הממוזגת', p:'8 דקות הליכה: הכיפה המפוארת, קומות במיזוג, וגג תצפית חינמי. שעה-שעתיים ואז חוזרים למנוחה — לא במקום כל המנוחה.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
   ]},
@@ -1459,6 +1463,8 @@ const TRIP=[
  {n:'חנות PSG', q:'PSG Store 92 Avenue des Champs-Élysées Paris', d:'חנות הדגל בשאנז אליזה — עצירת חובה בערב חמישי', tag:'קניות'},
  {n:'גלרי לפאייט', q:'Galeries Lafayette Haussmann Paris', d:'הכיפה המפוארת וגג תצפית חינמי', tag:'קניות'},
  {n:'Marin Montagut', q:'Marin Montagut Paris', d:'חנות קטנה ומעוצבת — כלי בית ומזכרות', tag:'קניות'},
+ {n:'Season Marais', q:'Season Marais Paris', d:'ארוחת בוקר במארה העילי — פתיחת מסלול רביעי', tag:'קפה ומתוקים'},
+ {n:'Boot Café', q:'Boot Café Paris', d:'אספרסו זעיר בחזית סנדלרייה ישנה במארה', tag:'קפה ומתוקים'},
  {n:'שיט Vedettes du Pont Neuf', q:'Vedettes du Pont Neuf Paris', d:'שיט ערב על הסן — רביעי ~21:00', tag:'חוויות'},
  {n:'ארמון ורסאי', q:'Château de Versailles', d:'ראשון 2.8 ב־13:30 — כרטיס גישה מלאה', tag:'אתרים', mode:'transit'},
  {n:'גני ורסאי', q:'Gardens of Versailles', d:'מדשאות, חורשות מוצלות ותעלות — בכרטיס המלא', tag:'פארקים', mode:'transit', x:['מוצל']},
