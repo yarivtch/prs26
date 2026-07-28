@@ -891,7 +891,10 @@ const DAYS = [
   {t:'05:40 → 09:30', h:'טיסה LY319 לפריז', p:'~5.5 שעות. לעודד את הילדים לישון — היום עוד ארוך. <a href="https://www.iaa.gov.il/airports/ben-gurion/flight-board/" target="_blank" rel="noopener">לוח ההמראות של נתב״ג בזמן אמת</a> — טיסה LY319.', chips:[['have','כרטיסים קיימים']], aik:'FLY'},
   {t:'09:30–10:45', h:'נחיתה ב־CDG', p:'ביקורת דרכונים (תור ארוך באוגוסט), מזוודות, ויציאה. עוקבים אחרי שילוט Taxi / Roissybus / RER לפי הבחירה. טיפ: התעלומה הראשונה של הטיול מחכה בכפתור למטה — מושלמת לתור בביקורת הדרכונים.', chips:[], aik:'CDG'},
   {t:'~11:00–12:00', h:'נסיעה לדירה', p:'Roissybus עד Opéra + 8 דק׳ הליכה, או RER B + מטרו 14, או מונית — פירוט בלשונית תחבורה. בדירה: מים, מקלחת ומנוחה אמיתית.', chips:[['bus','Roissybus'],['rerb','RER B + 14'],['taxi','או מונית'],['tix','כרטיס Airport €14']], m:HOME, dirs:[['מ־CDG בתח״צ','Charles de Gaulle Airport',"8 Rue de l'Arcade Paris",'transit'],['מ־CDG במונית','Charles de Gaulle Airport',"8 Rue de l'Arcade Paris",'driving']], aik:'CDG'},
-  {t:'12:30–17:00', h:'מנוחה', p:'אחרי לילה לבן — שינה קצרה לכולם. לא לוותר עליה.', chips:[], rest:true, aik:'REST'},
+  {t:'12:30–17:00', key:'d1mid', h:'צהריים — כמה מנוחה?', choice:[
+    {h:'מנוחה מלאה עד 17:00', p:'אחרי לילה לבן — שינה אמיתית לכולם במיזוג. הבחירה הבטוחה אם העיניים נעצמות.', chips:[['free','מיזוג בדירה']], aik:'REST'},
+    {h:'מנוחה קצרה ויציאה ~15:30', p:'שעתיים־שלוש שינה, ואז יעד קרוב וממוזג: גלרי לפאייט — הכיפה המפוארת, קומות במיזוג וגג תצפית חינמי. 8 דק׳ הליכה, ומשם ממשיכים ישר לקפה של 17:30 ולתוכנית הערב.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
+  ]},
   {t:'17:30', h:'קפה ומאפה שכונתי', p:'מקום קרוב לדירה. בלי הזמנה.', chips:[['walk','2–5 דק׳']], m:"cafe near 8 Rue de l'Arcade Paris", aik:'CAFE'},
   {t:'18:15–20:30', key:'d1eve', h:'ערב ראשון — לפי הכוח', choice:[
     {h:'היכרות שכונתית רגועה', p:'כנסיית המדלן מבחוץ (2 דק׳) ← Rue Royale ← כיכר הקונקורד ← ישיבה בגני הטווילרי. הליכה שטוחה וקצרה, חוזרים מתי שרוצים. הבחירה השפויה אחרי לילה לבן.', chips:[['walk','ברגל'],['free','חינם']], m:'Jardin des Tuileries Paris', dir:true},
@@ -1236,15 +1239,16 @@ function placeQuery(name){
 function esc(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-/* השמעת שם המקום בצרפתית (Web Speech API — קול מהמכשיר) */
-function speakFr(text){
+/* השמעה קולית (Web Speech API — קול מהמכשיר) */
+function speak(text,lang){
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.lang='fr-FR'; u.rate=0.85;
+    u.lang=lang||'fr-FR'; u.rate=0.85;
     speechSynthesis.speak(u);
   }catch(e){}
 }
+function speakFr(text){ speak(text,'fr-FR'); }
 /* הטקסט להשמעה: שם לטיני כמו שהוא; שם עברי — לפי שאילתת המפה. חיפושים חיים — בלי כפתור. */
 function frText(p){
   if(/kosher restaurant/.test(p.q)) return null;
@@ -1439,71 +1443,117 @@ const TRIP=[
 ];
 
 /* ═══════════ שיחון ═══════════ */
-/* [עברית, צרפתית, תעתיק להגייה] */
+/* [עברית, צרפתית, תעתיק צרפתית, אנגלית] */
 const PHRASES=[
  {c:'👋 בסיס ונימוס', items:[
-  ['שלום (ביום)','Bonjour','בּוֹנְז׳וּר'],
-  ['ערב טוב','Bonsoir','בּוֹנְסוּאָר'],
-  ['תודה רבה','Merci beaucoup','מֶרְסִי בּוֹקוּ'],
-  ['בבקשה (כשמבקשים)','S\'il vous plaît','סִיל ווּ פְּלֶה'],
-  ['סליחה','Excusez-moi','אֶקְסְקִיזֶה־מוּאָה'],
-  ['אתם מדברים אנגלית?','Parlez-vous anglais ?','פַּרְלֶה־ווּ אַנְגְלֶה?'],
-  ['אני לא מדבר צרפתית','Je ne parle pas français','זְ׳ה נְה פַּרְל פַּה פְרַנְסֶה'],
-  ['להתראות','Au revoir','אוֹ רְווּאָר']
+  ['שלום (ביום)','Bonjour','בּוֹנְז׳וּר','Hello'],
+  ['ערב טוב','Bonsoir','בּוֹנְסוּאָר','Good evening'],
+  ['תודה רבה','Merci beaucoup','מֶרְסִי בּוֹקוּ','Thank you very much'],
+  ['בבקשה (כשמבקשים)','S\'il vous plaît','סִיל ווּ פְּלֶה','Please'],
+  ['סליחה','Excusez-moi','אֶקְסְקִיזֶה־מוּאָה','Excuse me'],
+  ['אתם מדברים אנגלית?','Parlez-vous anglais ?','פַּרְלֶה־ווּ אַנְגְלֶה?','Do you speak English?'],
+  ['אני לא מדבר צרפתית','Je ne parle pas français','זְ׳ה נְה פַּרְל פַּה פְרַנְסֶה','I don\'t speak French'],
+  ['להתראות','Au revoir','אוֹ רְווּאָר','Goodbye']
  ]},
- {c:'🚕 במונית', items:[
-  ['לכתובת הזאת, בבקשה','À cette adresse, s\'il vous plaît','אַ סֶט אַדְרֶס, סִיל ווּ פְּלֶה'],
-  ['לרחוב דה לארקד 8, בבקשה','8 Rue de l\'Arcade, s\'il vous plaît','וִיט רוּ דְה לַרְקַד, סִיל ווּ פְּלֶה'],
-  ['לשדה התעופה שארל דה גול','À l\'aéroport Charles de Gaulle, s\'il vous plaît','אַ לַאֵרוֹפּוֹר שַׁרְל דְה גוֹל'],
-  ['כמה זה עולה?','Combien ça coûte ?','קוֹמְבִּיאַן סָה קוּט?'],
-  ['אפשר לשלם בכרטיס?','Vous prenez la carte ?','ווּ פְּרֶנֶה לָה קַרְט?'],
-  ['כאן זה מצוין, תודה','Ici c\'est parfait, merci','אִיסִי סֶה פַּרְפֶה, מֶרְסִי']
+ {c:'🚕 במונית ובאובר/בולט', items:[
+  ['לכתובת הזאת, בבקשה','À cette adresse, s\'il vous plaît','אַ סֶט אַדְרֶס, סִיל ווּ פְּלֶה','To this address, please'],
+  ['לרחוב דה לארקד 8, בבקשה','8 Rue de l\'Arcade, s\'il vous plaît','וִיט רוּ דְה לַרְקַד, סִיל ווּ פְּלֶה','To 8 Rue de l\'Arcade, please'],
+  ['לשדה התעופה שארל דה גול','À l\'aéroport Charles de Gaulle, s\'il vous plaît','אַ לַאֵרוֹפּוֹר שַׁרְל דְה גוֹל','To Charles de Gaulle airport, please'],
+  ['אתה הנהג מהאפליקציה?','C\'est vous le chauffeur de l\'appli ?','סֶה ווּ לְה שׁוֹפֶר דְה לַאפְּלִי?','Are you the driver from the app?'],
+  ['כמה זה עולה?','Combien ça coûte ?','קוֹמְבִּיאַן סָה קוּט?','How much does it cost?'],
+  ['אפשר לשלם בכרטיס?','Vous prenez la carte ?','ווּ פְּרֶנֶה לָה קַרְט?','Do you take card?'],
+  ['אפשר לעצור כאן, בבקשה','Ici c\'est parfait, merci','אִיסִי סֶה פַּרְפֶה, מֶרְסִי','You can stop here, thanks']
+ ]},
+ {c:'🚇 במטרו וברכבת', items:[
+  ['כרטיס אחד, בבקשה','Un ticket, s\'il vous plaît','אַן טִיקֶה, סִיל ווּ פְּלֶה','One ticket, please'],
+  ['ארבעה כרטיסים, בבקשה','Quatre tickets, s\'il vous plaît','קַטְר טִיקֶה, סִיל ווּ פְּלֶה','Four tickets, please'],
+  ['איזה קו למדלן?','Quelle ligne pour Madeleine ?','קֶל לִין פּוּר מַדְלֶן?','Which line goes to Madeleine?'],
+  ['זו התחנה הנכונה ל…?','C\'est le bon arrêt pour… ?','סֶה לְה בּוֹן אַרֶה פּוּר…?','Is this the right stop for…?'],
+  ['איפה היציאה?','Où est la sortie ?','אוּ אֶה לָה סוֹרְטִי?','Where is the exit?'],
+  ['המכונה לא עובדת','La machine ne marche pas','לָה מַשִׁין נְה מַרְשׁ פַּה','The machine isn\'t working']
  ]},
  {c:'🛒 במכולת ובסופר', items:[
-  ['איפה הפירות?','Où sont les fruits ?','אוּ סוֹן לֶה פְרוּאִי?'],
-  ['כמה זה?','C\'est combien ?','סֶה קוֹמְבִּיאַן?'],
-  ['שקית, בבקשה','Un sac, s\'il vous plaît','אַן סַק, סִיל ווּ פְּלֶה'],
-  ['יש לכם מים קרים?','Vous avez de l\'eau fraîche ?','ווּ זַאבֶה דְה לוֹ פְרֶשׁ?'],
-  ['איפה הקופה?','Où est la caisse ?','אוּ אֶה לָה קֶס?'],
-  ['אפשר לשלם בכרטיס?','Vous prenez la carte ?','ווּ פְּרֶנֶה לָה קַרְט?']
+  ['איפה הפירות?','Où sont les fruits ?','אוּ סוֹן לֶה פְרוּאִי?','Where is the fruit?'],
+  ['כמה זה?','C\'est combien ?','סֶה קוֹמְבִּיאַן?','How much is it?'],
+  ['שקית, בבקשה','Un sac, s\'il vous plaît','אַן סַק, סִיל ווּ פְּלֶה','A bag, please'],
+  ['יש לכם מים קרים?','Vous avez de l\'eau fraîche ?','ווּ זַאבֶה דְה לוֹ פְרֶשׁ?','Do you have cold water?'],
+  ['איפה הקופה?','Où est la caisse ?','אוּ אֶה לָה קֶס?','Where is the checkout?'],
+  ['אפשר לשלם בכרטיס?','Vous prenez la carte ?','ווּ פְּרֶנֶה לָה קַרְט?','Do you take card?']
  ]},
  {c:'☕ בבית קפה ובמסעדה', items:[
-  ['שולחן לארבעה, בבקשה','Une table pour quatre, s\'il vous plaît','אִין טַאבְּל פּוּר קַטְר, סִיל ווּ פְּלֶה'],
-  ['קרואסון וקפה, בבקשה','Un croissant et un café, s\'il vous plaît','אַן קְרוּאַסוֹן אֶה אַן קָפֶה, סִיל ווּ פְּלֶה'],
-  ['מים, בבקשה','De l\'eau, s\'il vous plaît','דְה לוֹ, סִיל ווּ פְּלֶה'],
-  ['זה צמחוני?','C\'est végétarien ?','סֶה וֶזֶ׳טַרְיאַן?'],
-  ['זה כשר?','Est-ce que c\'est casher ?','אֶס־קְה סֶה קַשֶׁר?'],
-  ['חשבון, בבקשה','L\'addition, s\'il vous plaît','לַאדִיסְיוֹן, סִיל ווּ פְּלֶה']
+  ['שולחן לארבעה, בבקשה','Une table pour quatre, s\'il vous plaît','אִין טַאבְּל פּוּר קַטְר, סִיל ווּ פְּלֶה','A table for four, please'],
+  ['קרואסון וקפה, בבקשה','Un croissant et un café, s\'il vous plaît','אַן קְרוּאַסוֹן אֶה אַן קָפֶה, סִיל ווּ פְּלֶה','A croissant and a coffee, please'],
+  ['מים, בבקשה','De l\'eau, s\'il vous plaît','דְה לוֹ, סִיל ווּ פְּלֶה','Some water, please'],
+  ['זה צמחוני?','C\'est végétarien ?','סֶה וֶזֶ׳טַרְיאַן?','Is it vegetarian?'],
+  ['זה כשר?','Est-ce que c\'est casher ?','אֶס־קְה סֶה קַשֶׁר?','Is this kosher?'],
+  ['תפריט באנגלית, בבקשה','La carte en anglais, s\'il vous plaît','לָה קַרְט אַן אַנְגְלֶה','An English menu, please'],
+  ['חשבון, בבקשה','L\'addition, s\'il vous plaît','לַאדִיסְיוֹן, סִיל ווּ פְּלֶה','The bill, please']
+ ]},
+ {c:'🏛️ במוזיאון ובאטרקציות', items:[
+  ['יש לנו כרטיסים','Nous avons des billets','נוּ זַאבוֹן דֶה בִּיֶה','We have tickets'],
+  ['איפה הכניסה למזמינים מראש?','Où est l\'entrée avec réservation ?','אוּ אֶה לַאנְטְרֶה אַבֶק רֶזֶרְבַסְיוֹן?','Where is the entrance for reservations?'],
+  ['זה חינם לילדים?','C\'est gratuit pour les enfants ?','סֶה גְרַטְוִי פּוּר לֶה זַאנְפַן?','Is it free for children?'],
+  ['אפשר לצלם?','On peut prendre des photos ?','אוֹן פְּה פְּרַנְדְר דֶה פוֹטוֹ?','Can we take photos?'],
+  ['באיזו שעה אתם סוגרים?','Vous fermez à quelle heure ?','ווּ פֶרְמֶה אַ קֶל אֶר?','What time do you close?'],
+  ['איפה חנות המזכרות?','Où est la boutique ?','אוּ אֶה לָה בּוּטִיק?','Where is the gift shop?']
+ ]},
+ {c:'🏠 בדירה ומול המארח', items:[
+  ['הגענו!','Nous sommes arrivés !','נוּ סוֹם זַארִיבֶה!','We\'ve arrived!'],
+  ['איך עובד המזגן?','Comment marche la climatisation ?','קוֹמַן מַרְשׁ לָה קְלִימַטִיזַסְיוֹן?','How does the air conditioning work?'],
+  ['מה קוד ה־WiFi?','Quel est le code WiFi ?','קֶל אֶה לְה קוֹד וִיפִי?','What\'s the WiFi code?'],
+  ['אין מים חמים','Il n\'y a pas d\'eau chaude','אִיל נְיַה פַּה דוֹ שׁוֹד','There\'s no hot water'],
+  ['אפשר להשאיר מזוודות?','On peut laisser les valises ?','אוֹן פְּה לֶסֶה לֶה וַלִיז?','Can we leave our luggage?'],
+  ['באיזו שעה הצ׳ק־אאוט?','Le départ est à quelle heure ?','לְה דֶפַּר אֶה אַ קֶל אֶר?','What time is check-out?']
+ ]},
+ {c:'🛍️ בקניות', items:[
+  ['אני רק מסתכל, תודה','Je regarde seulement, merci','זְ׳ה רְגַרְד סֶלְמַן, מֶרְסִי','I\'m just looking, thanks'],
+  ['יש מידה אחרת?','Vous avez une autre taille ?','ווּ זַאבֶה אִין אוֹטְר טַאי?','Do you have another size?'],
+  ['כמה זה עולה?','Ça coûte combien ?','סָה קוּט קוֹמְבִּיאַן?','How much does this cost?'],
+  ['אפשר החזר מס (Tax Free)?','Vous faites la détaxe ?','ווּ פֶט לָה דֶטַקְס?','Do you do tax-free refunds?'],
+  ['אפשר לעטוף למתנה?','Vous pouvez faire un paquet cadeau ?','ווּ פּוּבֶה פֶר אַן פַּקֶה קַדוֹ?','Can you gift-wrap it?']
  ]},
  {c:'🧭 התמצאות ברחוב', items:[
-  ['איפה המטרו?','Où est le métro ?','אוּ אֶה לְה מֶטְרוֹ?'],
-  ['איפה השירותים?','Où sont les toilettes ?','אוּ סוֹן לֶה טוּאָלֶט?'],
-  ['זה רחוק?','C\'est loin ?','סֶה לוּאַן?'],
-  ['ימינה','À droite','אַ דְרוּאָט'],
-  ['שמאלה','À gauche','אַ גוֹשׁ'],
-  ['ישר','Tout droit','טוּ דְרוּאָה'],
-  ['הלכנו לאיבוד','Nous sommes perdus','נוּ סוֹם פֶּרְדוּ']
+  ['איפה המטרו?','Où est le métro ?','אוּ אֶה לְה מֶטְרוֹ?','Where is the metro?'],
+  ['איפה השירותים?','Où sont les toilettes ?','אוּ סוֹן לֶה טוּאָלֶט?','Where are the toilets?'],
+  ['זה רחוק?','C\'est loin ?','סֶה לוּאַן?','Is it far?'],
+  ['ימינה','À droite','אַ דְרוּאָט','To the right'],
+  ['שמאלה','À gauche','אַ גוֹשׁ','To the left'],
+  ['ישר','Tout droit','טוּ דְרוּאָה','Straight ahead'],
+  ['הלכנו לאיבוד','Nous sommes perdus','נוּ סוֹם פֶּרְדוּ','We\'re lost']
  ]},
  {c:'🆘 חירום ובריאות', items:[
-  ['הצילו!','Au secours !','אוֹ סְקוּר!'],
-  ['תקראו למשטרה','Appelez la police','אַפְּלֶה לָה פּוֹלִיס'],
-  ['אני צריך רופא','J\'ai besoin d\'un médecin','זֶ׳ה בְּזוּאַן דַאן מֶדְסַן'],
-  ['איפה בית המרקחת?','Où est la pharmacie ?','אוּ אֶה לָה פַרְמַסִי?'],
-  ['הילד שלי חולה','Mon enfant est malade','מוֹן אַנְפַן אֶה מַלַאד']
+  ['הצילו!','Au secours !','אוֹ סְקוּר!','Help!'],
+  ['תקראו למשטרה','Appelez la police','אַפְּלֶה לָה פּוֹלִיס','Call the police'],
+  ['אני צריך רופא','J\'ai besoin d\'un médecin','זֶ׳ה בְּזוּאַן דַאן מֶדְסַן','I need a doctor'],
+  ['איפה בית המרקחת?','Où est la pharmacie ?','אוּ אֶה לָה פַרְמַסִי?','Where is the pharmacy?'],
+  ['הילד שלי חולה','Mon enfant est malade','מוֹן אַנְפַן אֶה מַלַאד','My child is sick'],
+  ['איבדנו תיק','Nous avons perdu un sac','נוּ זַאבוֹן פֶּרְדוּ אַן סַק','We lost a bag']
  ]}
 ];
+let phraseLang='fr';
 function renderPhrasebook(){
-  document.getElementById('phrasebook').innerHTML=PHRASES.map(g=>`
-    <details>
+  const openCats=[...document.querySelectorAll('#phrasebook details[open]')].map(d=>d.dataset.c);
+  document.getElementById('phrasebook').innerHTML=
+    `<div class="filterrow" style="margin:8px 0 4px">
+      <button type="button" class="daychip${phraseLang==='fr'?' sel':''}" data-l="fr">🇫🇷 צרפתית</button>
+      <button type="button" class="daychip${phraseLang==='en'?' sel':''}" data-l="en">🇬🇧 אנגלית</button>
+    </div>`+
+    PHRASES.map(g=>`
+    <details data-c="${esc(g.c)}"${openCats.includes(g.c)?' open':''}>
       <summary>${g.c}</summary>
-      ${g.items.map(i=>`
+      ${g.items.map(i=>{
+        const txt = phraseLang==='fr' ? i[1] : i[3];
+        return `
         <div class="phrase">
-          <div><div class="he">${i[0]}</div><div class="tr">${i[2]}</div></div>
-          <div class="frwrap"><span class="fr">${esc(i[1])}</span><button type="button" class="saybtn" data-say="${esc(i[1])}" aria-label="השמעה">🔊</button></div>
-        </div>`).join('')}
+          <div><div class="he">${i[0]}</div>${phraseLang==='fr'?`<div class="tr">${i[2]}</div>`:''}</div>
+          <div class="frwrap"><span class="fr">${esc(txt)}</span><button type="button" class="saybtn" data-say="${esc(txt)}" aria-label="השמעה">🔊</button></div>
+        </div>`;}).join('')}
     </details>`).join('');
+  document.querySelectorAll('#phrasebook [data-l]').forEach(b=>{
+    b.onclick=()=>{ phraseLang=b.dataset.l; renderPhrasebook(); };
+  });
   document.querySelectorAll('#phrasebook .saybtn').forEach(b=>{
-    b.onclick=()=>speakFr(b.dataset.say);
+    b.onclick=()=>speak(b.dataset.say, phraseLang==='fr'?'fr-FR':'en-GB');
   });
 }
 renderPhrasebook();
