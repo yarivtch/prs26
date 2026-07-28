@@ -266,6 +266,12 @@ button.chip.ai:active{background:#7A3FA8;color:#fff}
 .placecard p{font-size:.85rem;color:var(--ink-soft);line-height:1.5;margin-top:3px}
 .placecard .chips{margin-top:8px}
 .placecard .byline{display:inline-block;font-size:.7rem;font-weight:700;border-radius:6px;padding:1px 8px;background:#EEF1F5;color:var(--ink-soft);margin-inline-start:6px;vertical-align:2px}
+.saybtn{
+  background:none;border:1.5px solid var(--line);border-radius:8px;
+  padding:1px 7px;cursor:pointer;font-size:.8rem;line-height:1.4;
+  margin-inline-start:6px;vertical-align:1px;color:var(--metro);
+}
+.saybtn:active{border-color:var(--metro);background:var(--paper)}
 .filterrow{display:flex;gap:8px;flex-wrap:wrap;margin:0 2px 12px}
 .delbtn{
   flex:0 0 auto;background:none;border:1.5px solid var(--line);border-radius:8px;
@@ -1215,6 +1221,23 @@ function placeQuery(name){
 function esc(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+/* השמעת שם המקום בצרפתית (Web Speech API — קול מהמכשיר) */
+function speakFr(text){
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='fr-FR'; u.rate=0.85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+/* הטקסט להשמעה: שם לטיני כמו שהוא; שם עברי — לפי שאילתת המפה. חיפושים חיים — בלי כפתור. */
+function frText(p){
+  if(/kosher restaurant/.test(p.q)) return null;
+  const latinName = /[A-Za-z]/.test(p.name) && !/[֐-׿]/.test(p.name);
+  const t = latinName ? p.name : p.q.replace(/,? ?(75\d{3} )?(Paris|France)$/,'');
+  return /[A-Za-z]/.test(t) ? t : null;
+}
+
 let placeFilter='הכל', topicFilter='הכל';
 function allPlaces(){
   const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', tag:p.tag||'', fixed:false}));
@@ -1247,7 +1270,7 @@ function renderPlaces(){
     el.className='placecard';
     el.innerHTML=`
       <div class="txt">
-        <h3>${esc(p.name)}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}${p.tag?`<span class="byline">${esc(p.tag)}</span>`:''}</h3>
+        <h3>${esc(p.name)}${frText(p)?`<button type="button" class="saybtn" data-say="${esc(frText(p))}" aria-label="השמעת השם בצרפתית">🔊</button>`:''}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}${p.tag?`<span class="byline">${esc(p.tag)}</span>`:''}</h3>
         ${p.note?`<p>${esc(p.note)}</p>`:''}
         <div class="chips">
           <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
@@ -1264,6 +1287,9 @@ function renderPlaces(){
       myPlaces=myPlaces.filter(x=>String(x.id)!==b.dataset.del);
       sSet(PKEY, JSON.stringify(myPlaces)); renderPlaces();
     };
+  });
+  wrap.querySelectorAll('.saybtn').forEach(b=>{
+    b.onclick=e=>{ e.stopPropagation(); speakFr(b.dataset.say); };
   });
   bindAi(wrap);
   document.getElementById('placesEmpty').textContent =
