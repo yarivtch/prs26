@@ -348,7 +348,7 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 <section class="panel" id="panel-todos">
   <div class="infocard">
     <h3>📝 משימות</h3>
-    <p>סמנו מה בוצע, מחקו מה שכבר לא רלוונטי, והוסיפו משימות חדשות.</p>
+    <p>סמנו מה בוצע, מחקו מה שכבר לא רלוונטי, והוסיפו משימות חדשות עם כפתור ה־+ למטה.</p>
     <div class="addbox">
       <input type="text" id="todoText" placeholder="משימה חדשה" maxlength="120">
       <button id="addTodoBtn" class="addbtn">+ הוסף משימה</button>
@@ -1437,15 +1437,16 @@ document.querySelectorAll('nav button').forEach(btn=>{
     btn.classList.add('sel');
     document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
-    addFab.classList.toggle('show', btn.dataset.panel==='places');
+    addFab.classList.toggle('show', btn.dataset.panel==='places'||btn.dataset.panel==='todos');
     window.scrollTo({top:0});
   };
 });
 addFab.onclick=()=>{
-  const box=document.querySelector('#panel-places .addbox');
+  const inPlaces=document.getElementById('panel-places').classList.contains('active');
+  const box=document.querySelector(inPlaces ? '#panel-places .addbox' : '#panel-todos .addbox');
   if(box.classList.toggle('open')){
     box.scrollIntoView({behavior:'smooth', block:'center'});
-    document.getElementById('placeName').focus();
+    document.getElementById(inPlaces ? 'placeName' : 'todoText').focus();
   }
 };
 
