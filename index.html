@@ -379,9 +379,11 @@ nav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
     <h3><span class="navsvg"></span>המקומות שלנו</h3>
     <p>הרשימה של מירית, המקומות מהלו״ז, מקומות כשרים, וכל מה שתוסיפו (כפתור ה־+ למטה). סינון בשתי שורות — לפי מקור ולפי נושא.</p>
     <div class="chips">
-      <a data-map="kosher restaurant near me">אתר לי מקומות כשרים לידי</a>
+      <a data-map="kosher restaurant near me">כשר לידי</a>
+      <a data-map="kosher dairy restaurant near me">🥛 חלבי כשר לידי</a>
+      <a data-map="vegetarian restaurant near me">🥗 צמחוני לידי</a>
     </div>
-    <p style="margin-top:8px;font-size:.8rem;color:var(--ink-soft)">🕎 רוב המסעדות הכשרות סגורות משישי אחה״צ עד מוצ״ש — לבדוק תעודת כשרות בכניסה.</p>
+    <p style="margin-top:8px;font-size:.8rem;color:var(--ink-soft)">הכפתורים נפתחים בגוגל מפות ממוינים לפי קרבה אליכם — המרחק מכם מוצג שם ליד כל תוצאה. 🕎 רוב המסעדות הכשרות סגורות משישי אחה״צ עד מוצ״ש — לבדוק תעודת כשרות בכניסה.</p>
     <div class="addbox">
       <input type="text" id="placeName" placeholder="שם המקום (למשל: Berthillon)" maxlength="80">
       <input type="text" id="placeNote" placeholder="הערה (אופציונלי: גלידה מפורסמת, ליד הדירה...)" maxlength="120">
@@ -901,10 +903,7 @@ const DAYS = [
     {h:'מנוחה קצרה ויציאה ~15:30', p:'שעתיים־שלוש שינה, ואז יעד קרוב וממוזג: גלרי לפאייט — הכיפה המפוארת, קומות במיזוג וגג תצפית חינמי. 8 דק׳ הליכה, ומשם ממשיכים ישר לקפה של 17:30 ולתוכנית הערב.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
   ]},
   {t:'17:30', h:'קפה ומאפה שכונתי', p:'מקום קרוב לדירה. בלי הזמנה.', chips:[['walk','2–5 דק׳']], m:"cafe near 8 Rue de l'Arcade Paris", aik:'CAFE'},
-  {t:'18:15–20:30', key:'d1eve', h:'ערב ראשון — לפי הכוח', choice:[
-    {h:'היכרות שכונתית רגועה', p:'כנסיית המדלן מבחוץ (2 דק׳) ← Rue Royale ← כיכר הקונקורד ← ישיבה בגני הטווילרי. הליכה שטוחה וקצרה, חוזרים מתי שרוצים. הבחירה השפויה אחרי לילה לבן.', chips:[['walk','ברגל'],['free','חינם']], m:'Jardin des Tuileries Paris', dir:true},
-    {h:'ערב פתיחה במונמרט', p:'רק אם כולם מפתיעים באנרגיה: מטרו 12 מ־Madeleine ישיר ל־Abbesses, פוניקולר לסקרה־קר, שקיעה מהמדרגות. עמוס — שימו לב לתיקים.', chips:[['l12','מטרו 12'],['tix','פוניקולר בכרטיס מטרו']], m:'Sacré-Cœur Montmartre Paris'}
-  ]},
+  {t:'ערב', h:'✔ ערב ראשון — בוצע ובגדול', p:'כיכר הקונקורד ← גני הטווילרי ← שאנז אליזה ← שער הניצחון. כל הציר ההיסטורי כבר ביום הראשון — פתיחה מרשימה בהרבה מהמתוכנן!', chips:[['have','בוצע']], m:'Arc de Triomphe Paris', aik:'Arc de Triomphe Paris'},
   {t:'20:45', h:'ארוחת ערב ושינה מוקדמת', p:'ערב פשוט באזור הדירה.', chips:[['walk','ברגל']], m:HOME, aik:'REST'}
  ]
 },
@@ -1264,17 +1263,18 @@ function frText(p){
 
 let placeFilter='הכל', topicFilter='הכל';
 function allPlaces(){
-  const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', tag:p.tag||'', fixed:false}));
-  const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', tag:p.tag||'', fixed:true}));
-  const trip=TRIP.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מסלול', tag:p.tag||'', fixed:true}));
-  const kosher=KOSHER.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'כשר', tag:p.tag||'', fixed:true}));
-  return users.concat(mirit, trip, kosher);
+  const users=myPlaces.map(p=>({id:p.id, name:p.name, note:p.note||'', q:placeQuery(p.name), mode:'walking', by:p.by||'', tag:p.tag||'', x:[], fixed:false}));
+  const mirit=MIRIT.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מירית', tag:p.tag||'', x:p.x||[], fixed:true}));
+  const trip=TRIP.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'מסלול', tag:p.tag||'', x:p.x||[], fixed:true}));
+  const kosher=KOSHER.map(p=>({id:null, name:p.n, note:p.d, q:p.q, mode:p.mode||'walking', by:'כשר', tag:p.tag||'', x:p.x||[], fixed:true}));
+  /* הכשרים מוצגים ראשונים מבין הרשימות הקבועות */
+  return users.concat(kosher, mirit, trip);
 }
 function renderPlaces(){
   const wrap=document.getElementById('myPlacesList');
   const all=allPlaces();
   const names=[...new Set(all.map(p=>p.by).filter(Boolean))];
-  const tags=[...new Set(all.map(p=>p.tag).filter(Boolean))];
+  const tags=[...new Set(all.flatMap(p=>[p.tag,...p.x]).filter(Boolean))];
   if(placeFilter!=='הכל' && !names.includes(placeFilter)) placeFilter='הכל';
   if(topicFilter!=='הכל' && !tags.includes(topicFilter)) topicFilter='הכל';
   const frow=document.getElementById('placeFilter');
@@ -1287,14 +1287,14 @@ function renderPlaces(){
   trow.querySelectorAll('button').forEach(b=>{ b.onclick=()=>{ topicFilter=b.dataset.f; renderPlaces(); }; });
   const list = all.filter(p=>
     (placeFilter==='הכל' || p.by===placeFilter) &&
-    (topicFilter==='הכל' || p.tag===topicFilter));
+    (topicFilter==='הכל' || p.tag===topicFilter || p.x.includes(topicFilter)));
   wrap.innerHTML='';
   list.forEach(p=>{
     const el=document.createElement('div');
     el.className='placecard';
     el.innerHTML=`
       <div class="txt">
-        <h3>${esc(p.name)}${frText(p)?`<button type="button" class="saybtn" data-say="${esc(frText(p))}" aria-label="השמעת השם בצרפתית">🔊</button>`:''}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}${p.tag?`<span class="byline">${esc(p.tag)}</span>`:''}</h3>
+        <h3>${esc(p.name)}${frText(p)?`<button type="button" class="saybtn" data-say="${esc(frText(p))}" aria-label="השמעת השם בצרפתית">🔊</button>`:''}${p.by?`<span class="byline">${esc(p.by)}</span>`:''}${[p.tag,...p.x].filter(Boolean).map(t=>`<span class="byline">${esc(t)}</span>`).join('')}</h3>
         ${p.note?`<p>${esc(p.note)}</p>`:''}
         <div class="chips">
           <a class="chip map" href="${G(p.q)}" target="_blank" rel="noopener">${I_MAP} מפה</a>
@@ -1393,9 +1393,9 @@ const MIRIT=[
  {n:'Mamiche', q:'Mamiche boulangerie Paris', d:'מאפייה · ★ 4.6 · €1–10 · שני סניפים — המפה תציג את הקרוב', tag:'קפה ומתוקים'},
  {n:'Brigat\'', q:'Brigat\' patisserie Paris', d:'פטיסרי · ★ 4.7', tag:'קפה ומתוקים'},
  {n:'מוזיאון המדע והתעשייה', q:'Cité des Sciences et de l\'Industrie Paris', d:'מוזיאון מדע · ★ 3.8 · פארק לה־וילט', mode:'transit', tag:'מוזיאונים'},
- {n:'Carrefour City', q:'Carrefour City Madeleine Paris', d:'סופרמרקט · ★ 4.2', tag:'קניות'},
- {n:'Monoprix', q:'Monoprix 47 Boulevard Malesherbes Paris', d:'סופרמרקט · הסניף של קניות שישי (47 Bd Malesherbes)', tag:'קניות'},
- {n:'פאלה רויאל', q:'Palais Royal Paris', d:'ציון דרך תרבותי · ★ 4.6 · גנים ועמודים מפוספסים', tag:'אתרים'},
+ {n:'Carrefour City', q:'Carrefour City Madeleine Paris', d:'סופרמרקט · ★ 4.2', tag:'סופרמרקט'},
+ {n:'Monoprix', q:'Monoprix 47 Boulevard Malesherbes Paris', d:'סופרמרקט · הסניף של קניות שישי (47 Bd Malesherbes)', tag:'סופרמרקט'},
+ {n:'פאלה רויאל', q:'Palais Royal Paris', d:'ציון דרך תרבותי · ★ 4.6 · גנים מוצלים ועמודים מפוספסים', tag:'אתרים', x:['מוצל']},
  {n:'Papier Tigre', q:'Papier Tigre Paris', d:'חנות מכשירי כתיבה · ★ 4.6', tag:'קניות'},
  {n:'Café Verlet', q:'Café Verlet Paris', d:'בית קפה · ★ 4.3 · €10–20', tag:'קפה ומתוקים'},
  {n:'Noir Coffee Shop – Madeleine', q:'Noir Coffee Shop Madeleine Paris', d:'בית קפה · ★ 4.5 · €1–10 · ממש ליד הדירה', tag:'קפה ומתוקים'},
@@ -1425,7 +1425,8 @@ const KOSHER=[
 
 /* מקומות מתוך הלו״ז היומי (ללא כפילויות עם רשימת מירית) */
 const TRIP=[
- {n:'גני הטווילרי', q:'Jardin des Tuileries Paris', d:'הגנים בין הלובר לקונקורד — קרוסלה וסירות מפרש לילדים', tag:'פארקים'},
+ {n:'גני הטווילרי', q:'Jardin des Tuileries Paris', d:'הגנים בין הלובר לקונקורד — קרוסלה, סירות מפרש ושדרות עצים מוצלות', tag:'פארקים', x:['מוצל']},
+ {n:'פארק מונסו', q:'Parc Monceau Paris', d:'פארק מוצל ויפהפה ברובע 8 — ~10 דק׳ מהדירה, מפלט ירוק בגל החום', tag:'פארקים', x:['מוצל']},
  {n:'כנסיית המדלן', q:'La Madeleine Paris', d:'הכנסייה השכנה — 2 דק׳ מהדירה', tag:'אתרים'},
  {n:'כיכר הקונקורד', q:'Place de la Concorde Paris', d:'בדרך מהמדלן לטווילרי', tag:'אתרים'},
  {n:'אופרה גרנייה', q:'Palais Garnier Paris', d:'מוארת יפה בערב — 8 דק׳ מהדירה', tag:'אתרים'},
@@ -1440,7 +1441,7 @@ const TRIP=[
  {n:'Marin Montagut', q:'Marin Montagut Paris', d:'חנות קטנה ומעוצבת — כלי בית ומזכרות', tag:'קניות'},
  {n:'שיט Vedettes du Pont Neuf', q:'Vedettes du Pont Neuf Paris', d:'שיט ערב על הסן — רביעי ~21:00', tag:'חוויות'},
  {n:'ארמון ורסאי', q:'Château de Versailles', d:'ראשון 2.8 ב־13:30 — כרטיס גישה מלאה', tag:'אתרים', mode:'transit'},
- {n:'גני ורסאי', q:'Gardens of Versailles', d:'מדשאות, חורשות ותעלות — בכרטיס המלא', tag:'פארקים', mode:'transit'},
+ {n:'גני ורסאי', q:'Gardens of Versailles', d:'מדשאות, חורשות מוצלות ותעלות — בכרטיס המלא', tag:'פארקים', mode:'transit', x:['מוצל']},
  {n:'טריאנון והכפר של מארי אנטואנט', q:'Hameau de la Reine Versailles', d:'הארמונות הקטנים והכפר הכפרי — קסום לילדים', tag:'אתרים', mode:'transit'},
  {n:'שוק Marché Notre-Dame ורסאי', q:'Marché Notre-Dame Versailles', d:'שוק ראשון בבוקר — דוכנים וביתני אוכל', tag:'אוכל', mode:'transit'},
  {n:'Stade de France', q:'Stade de France Saint-Denis', d:'סיור באצטדיון הלאומי — שני בבוקר', tag:'חוויות', mode:'transit'},
