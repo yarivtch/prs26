@@ -909,7 +909,7 @@ const DAYS = [
     {h:'מנוחה קצרה ויציאה ~15:30', p:'שעתיים־שלוש שינה, ואז יעד קרוב וממוזג: גלרי לפאייט — הכיפה המפוארת, קומות במיזוג וגג תצפית חינמי. 8 דק׳ הליכה, ומשם ממשיכים ישר לקפה של 17:30 ולתוכנית הערב.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
   ]},
   {t:'17:30', h:'קפה ומאפה שכונתי', p:'מקום קרוב לדירה. בלי הזמנה.', chips:[['walk','2–5 דק׳']], m:"cafe near 8 Rue de l'Arcade Paris", aik:'CAFE'},
-  {t:'ערב', h:'✔ ערב ראשון — בוצע ובגדול', p:'כיכר הקונקורד ← גני הטווילרי ← שאנז אליזה ← שער הניצחון. כל הציר ההיסטורי כבר ביום הראשון — פתיחה מרשימה בהרבה מהמתוכנן!', chips:[['have','בוצע']], m:'Arc de Triomphe Paris', aik:'Arc de Triomphe Paris'},
+  {t:'ערב', h:'✔ ערב ראשון — בוצע ובגדול', p:'כיכר הקונקורד ← גני הטווילרי ← שאנז אליזה + חנות PSG ← שער הניצחון. כל הציר ההיסטורי כבר ביום הראשון — פתיחה מרשימה בהרבה מהמתוכנן!', chips:[['have','בוצע']], m:'Arc de Triomphe Paris', aik:'Arc de Triomphe Paris'},
   {t:'20:45', h:'ארוחת ערב ושינה מוקדמת', p:'ערב פשוט באזור הדירה.', chips:[['walk','ברגל']], m:HOME, aik:'REST'}
  ]
 },
@@ -924,7 +924,7 @@ const DAYS = [
     {h:'גלרי לפאייט הממוזגת', p:'8 דקות הליכה: הכיפה המפוארת, קומות במיזוג, וגג תצפית חינמי. שעה-שעתיים ואז חוזרים למנוחה — לא במקום כל המנוחה.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
   ]},
   {t:'19:30', h:'יציאה לערב ברובע 16', p:'מטרו 9 מ־Saint-Augustin (6 דק׳ מהדירה) חוצה את הרובע ה־16, או מונית ישירה למסעדה.', chips:[['tix','מטרו 9'],['taxi','או מונית']], aik:'METRO'},
-  {t:'20:00', h:'🍽️ ארוחת ערב — La Villa (רובע 16)', p:'המסעדה שבחרתם. פתחו במפה כדי לוודא כתובת וסניף לפני היציאה.', chips:[['book','כדאי להזמין מקום']], m:'La Villa restaurant Paris 16e'},
+  {t:'20:00', h:'🍽️ ארוחת ערב — Lavillak (רובע 16)', p:'אתר המסעדה (תפריט והזמנות): <a href="https://lavillak-paris16.fr" target="_blank" rel="noopener">lavillak-paris16.fr</a>', chips:[['book','כדאי להזמין מקום']], m:'Lavillak Paris 16'},
   {t:'21:30', h:'טרוקדרו — התצפית על המגדל', p:'הנוף הקלאסי מרחבת טרוקדרו, ואז יורדים דרך הגנים, חוצים את גשר יֶנה ומגיעים עד רגלי המגדל.', chips:[['walk','~15 דק׳ ירידה'],['free','חינם']], m:'Place du Trocadéro Paris', aik:'Eiffel Tower Paris'},
   {t:'22:00', h:'✨ הנצנוץ', p:'5 דקות של 20,000 נורות — מהמם מרגלי המגדל או מהגשר. יש סיבוב נוסף ב־23:00.', chips:[['free','חינם']], m:'Eiffel Tower Paris'},
   {t:'22:20', h:'חזרה לדירה', p:'מטרו 8 מ־École Militaire (12 דק׳ הליכה) ישיר ל־Madeleine, או מונית.', chips:[['l8','מטרו 8'],['taxi','או מונית']], m:HOME, aik:'METRO'}
@@ -1435,7 +1435,8 @@ const KOSHER=[
  {n:'Berbeche Burger', q:'Berbeche Burger Paris', d:'בורגר כשר ותיק ברובע 9', tag:'כשר'},
  {n:'רחוב Richer — אזור המסעדות הכשרות', q:'kosher restaurant Rue Richer Paris', d:'הריכוז הכשר המרכזי של פריז — ~20 דק׳ הליכה מהדירה או מטרו 8 ל־Grands Boulevards · חיפוש חי', tag:'כשר'},
  {n:'כשר ליד הדירה (מדלן/אופרה)', q:'kosher restaurant near Madeleine Paris', d:'חיפוש חי סביב הדירה', tag:'כשר'},
- {n:'כשר ליד שער הניצחון (רובע 17)', q:'kosher restaurant 17th arrondissement Paris', d:'לערב חמישי בשאנז — רובע עם קהילה יהודית גדולה · חיפוש חי', tag:'כשר', mode:'transit'},
+ {n:'Lavillak', q:'Lavillak Paris 16', d:'המסעדה שבחרתם ברובע 16 · lavillak-paris16.fr', tag:'כשר', mode:'transit'},
+ {n:'כשר ליד שער הניצחון (רובע 17)', q:'kosher restaurant 17th arrondissement Paris', d:'רובע עם קהילה יהודית גדולה · חיפוש חי', tag:'כשר', mode:'transit'},
  {n:'כשר במונמרט', q:'kosher restaurant Montmartre Paris', d:'לערבי מונמרט · חיפוש חי', tag:'כשר', mode:'transit'},
  {n:'כשר בוורסאי', q:'kosher restaurant Versailles France', d:'ליום ראשון בוורסאי · חיפוש חי', tag:'כשר', mode:'transit'}
 ];
