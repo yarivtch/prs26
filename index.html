@@ -946,8 +946,8 @@ const DAYS = [
   {t:'11:45', h:'חזרה למרכז', p:'מטרו 13 חזרה לסן־לזאר.', chips:[['l13','מטרו 13']], aik:'METRO'},
   {t:'12:15–13:30', h:'צהריים ליד הבית', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
   {t:'14:00–15:00', h:'🛒 קניות לשבת — בנחת', p:'Monoprix ב־47 Boulevard Malesherbes, 6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי.', chips:[['walk','ברגל']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
-  {t:'16:30–19:30', key:'d4aft', h:'אחר הצהריים — מה עושים?', choice:[
-    {h:'🚢 שיט שקיעה על הסן', p:'לסגור סוף־סוף את השיט שנדחה פעמיים! Vedettes du Pont Neuf — יציאות כל שעה בערך; לתפוס את 17:30 או 18:00 ולחזור עד ~19:45. אור הזהב על הלובר ונוטרדאם שווה את זה גם בלי הנצנוץ.', chips:[['l14','מטרו 14'],['book','לבדוק שעות ולהזמין']], m:'Vedettes du Pont Neuf, Square du Vert Galant Paris', dir:true},
+  {t:'16:00–19:30', key:'d4aft', h:'אחר הצהריים — מה עושים?', choice:[
+    {h:'🌳 פארק בולון (Bois de Boulogne)', p:'היער העירוני הגדול של מערב פריז: שבילים מוצלים, השכרת סירות משוטים על האגם (Lac Inférieur), ולילדים — Jardin d\'Acclimatation, פארק שעשועים ותיק בתוך היער (כניסה ומתקנים בתשלום). מטרו 1 מ־Concorde עד Les Sablons. לחזור הביתה עד ~19:30.', chips:[['l1','מטרו 1'],['tix','סירות/מתקנים בתשלום']], m:'Jardin d\'Acclimatation Bois de Boulogne Paris', dirs:[['מסלול בתח״צ','Jardin d\'Acclimatation Paris','transit']]},
     {h:'רגוע וקרוב: גלרי לפאייט או פארק מונסו', p:'הכיפה וגג התצפית של גלרי לפאייט (8 דק׳, ממוזג), או צל ודשא בפארק מונסו. בלי מטרו ובלי לחץ.', chips:[['walk','ברגל'],['free','חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
   ]},
   {t:'19:45', h:'ארוחת ערב והכנות אחרונות', p:'', chips:[], rest:true, aik:'REST'},
@@ -1034,7 +1034,7 @@ const CHECKLIST = [
  {id:'eiffel',  h:'מגדל אייפל — שני 3.8 אחה״צ', p:'להזמין עכשיו באתר הרשמי בלבד — נמכר ימים קדימה. קומה 2 מספיקה; פסגה אם חשוב.', badge:'buy', btxt:'לקנות מיד', m:'Eiffel Tower Paris', url:'https://www.toureiffel.paris/en'},
  {id:'stade',   h:'סיור Stade de France — שישי 31.7 ב־10:00', p:'כרטיסי GetYourGuide בטלפון (אסמכתה GYGN6BZ244KN). מפגש: דלת H בחנות האצטדיון, הגעה עד 09:30 — יציאה מהדירה 08:40.', badge:'have', btxt:'כבר קיים', m:'Boutique Stade de France Saint-Denis', url:'https://www.stadefrance.com/en/tour-pass'},
  {id:'museum',  h:'מוזיאון חמישי בבוקר — Paradox או גרווין', p:'לפי הבחירה בלו״ז. עדיפות לכרטיס עם ביטול. השני = גיבוי לשני אחה״צ.', badge:'buy', btxt:'אחרי שבוחרים', m:'Musée Grévin Paris', url:'https://www.grevin-paris.com/en'},
- {id:'cruise',  h:'שיט Vedettes du Pont Neuf — אופציה לשישי אחה״צ', p:'שיט שקיעה ~17:30/18:00, לפי הבחירה בלו״ז. לבדוק שעות באתר.', badge:'opt', btxt:'אם בוחרים', m:'Vedettes du Pont Neuf Paris', url:'https://www.vedettesdupontneuf.com'},
+ {id:'cruise',  h:'שיט Vedettes du Pont Neuf — חלון אחרון: ראשון בערב', p:'אחרי החזרה מוורסאי (~19:00), שיט ~21:30 עם נצנוץ 22:00 מהמים. אופציונלי — רק אם יש כוח.', badge:'opt', btxt:'אם יש כוח', m:'Vedettes du Pont Neuf Paris', url:'https://www.vedettesdupontneuf.com'},
  {id:'arc',     h:'שער הניצחון — תצפית ערב חמישי', p:'אם עולים לגג: לבדוק שעת כניסה אחרונה ולהזמין. קטינים בד״כ חינם.', badge:'opt', btxt:'לפי החלטה', m:'Arc de Triomphe Paris', url:'https://www.paris-arc-de-triomphe.fr/en'},
  {id:'apt',     h:'תיאום עם המארח', p:'שעת צ׳ק־אין ב־28.7 (מגיעים ~12:00 — לבקש הקדמה/השארת מזוודות) ושעת צ׳ק־אאוט ב־4.8 (לבקש השארת מזוודות עד 13:00).', badge:'buy', btxt:'לתאם היום'},
  {id:'checkin2', h:'צ׳ק־אין אונליין — טיסת החזור', p:'ב־3.8 אחרי 17:35. לשמור כרטיסי עלייה.', badge:'buy', btxt:'ב־3.8'},
@@ -1431,6 +1431,7 @@ const KOSHER=[
 /* מקומות מתוך הלו״ז היומי (ללא כפילויות עם רשימת מירית) */
 const TRIP=[
  {n:'גני הטווילרי', q:'Jardin des Tuileries Paris', d:'הגנים בין הלובר לקונקורד — קרוסלה, סירות מפרש ושדרות עצים מוצלות', tag:'פארקים', x:['מוצל']},
+ {n:'פארק בולון + ז׳רדן ד׳אקלימטסיון', q:'Jardin d\'Acclimatation Bois de Boulogne Paris', d:'היער הגדול של מערב פריז — סירות על האגם ופארק שעשועים לילדים', tag:'פארקים', x:['מוצל'], mode:'transit'},
  {n:'פארק מונסו', q:'Parc Monceau Paris', d:'פארק מוצל ויפהפה ברובע 8 — ~10 דק׳ מהדירה, מפלט ירוק בגל החום', tag:'פארקים', x:['מוצל']},
  {n:'כנסיית המדלן', q:'La Madeleine Paris', d:'הכנסייה השכנה — 2 דק׳ מהדירה', tag:'אתרים'},
  {n:'כיכר הקונקורד', q:'Place de la Concorde Paris', d:'בדרך מהמדלן לטווילרי', tag:'אתרים'},
