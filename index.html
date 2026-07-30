@@ -937,19 +937,17 @@ const DAYS = [
  id:'d4', date:'2026-07-31', short:'ו׳', label:'ו׳ 31.7', temp:33,
  title:'סטאד דה פראנס בבוקר וקניות לשבת',
  fix:'הגעה עד 09:30 לנקודת המפגש: דלת H בחנות האצטדיון (ליד המוזיאון). סיור באנגלית ב־10:00, כרטיסי GetYourGuide בטלפון (אסמכתה GYGN6BZ244KN).',
- note:'בוקר באצטדיון, קניות שבת בנחת בצהריים, ואחה״צ פתוח — שבת נכנסת מאוחר (~21:10).',
+ note:'רצף אחד: אצטדיון ← מטרו ישיר לפארק בולון ← חזרה, קניות שבת ב־16:45 והכנות. שבת נכנסת ~21:10.',
  stops:[
   {t:'07:50', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
   {t:'08:40', h:'יציאה: מטרו 13 לאצטדיון', p:'מסן־לזאר (6 דק׳ הליכה) לכיוון Saint-Denis-Université — לא Asnières! יורדים ב־Saint-Denis – Porte de Paris, ~10 דק׳ ברגל. (חלופות: RER B ל־La Plaine – Stade de France או RER D ל־Stade de France – Saint-Denis.)', chips:[['l13','מטרו 13'],['tix','€2.55']], m:'Gare Saint-Lazare Paris', dir:true, aik:'METRO'},
   {t:'09:30', h:'נקודת המפגש: דלת H', p:'<b>דלת H, בחנות Stade de France (ליד המוזיאון), כניסה פנימה.</b> ההנחיה בכרטיס: להגיע 30 דק׳ לפני. הכרטיס בטלפון — GetYourGuide, לוודא שהוא שמור לא־מקוון עוד הערב.', chips:[['have','כרטיסים קיימים']], m:'Boutique Stade de France Saint-Denis'},
   {t:'10:00–11:30', h:'🏟️ סיור סטאד דה פראנס (באנגלית)', p:'יציעים, חדרי הלבשה ומנהרת השחקנים — איפה שצרפת לקחה את המונדיאל ב־98.', chips:[['have','בכרטיס']]},
-  {t:'11:45', h:'חזרה למרכז', p:'מטרו 13 חזרה לסן־לזאר.', chips:[['l13','מטרו 13']], aik:'METRO'},
-  {t:'12:15–13:30', h:'צהריים ליד הבית', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
-  {t:'14:00–15:00', h:'🛒 קניות לשבת — בנחת', p:'Monoprix ב־47 Boulevard Malesherbes, 6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי.', chips:[['walk','ברגל']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
-  {t:'16:00–19:30', key:'d4aft', h:'אחר הצהריים — מה עושים?', choice:[
-    {h:'🌳 פארק בולון (Bois de Boulogne)', p:'היער העירוני הגדול של מערב פריז: שבילים מוצלים, השכרת סירות משוטים על האגם (Lac Inférieur), ולילדים — Jardin d\'Acclimatation, פארק שעשועים ותיק בתוך היער (כניסה ומתקנים בתשלום). מטרו 1 מ־Concorde עד Les Sablons. לחזור הביתה עד ~19:30.', chips:[['l1','מטרו 1'],['tix','סירות/מתקנים בתשלום']], m:'Jardin d\'Acclimatation Bois de Boulogne Paris', dirs:[['מסלול בתח״צ','Jardin d\'Acclimatation Paris','transit']]},
-    {h:'רגוע וקרוב: גלרי לפאייט או פארק מונסו', p:'הכיפה וגג התצפית של גלרי לפאייט (8 דק׳, ממוזג), או צל ודשא בפארק מונסו. בלי מטרו ובלי לחץ.', chips:[['walk','ברגל'],['free','חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
-  ]},
+  {t:'11:45', h:'ישר לפארק בולון — בלי לחזור הביתה', p:'מטרו 13 מ־Saint-Denis – Porte de Paris עד <b>Champs-Élysées–Clemenceau</b>, מעבר לקו 1 לכיוון La Défense, ירידה ב־<b>Les Sablons</b> (~45 דק׳ סה״כ). כדאי לקנות משהו לצהריים ליד האצטדיון או בדוכני הפארק.', chips:[['l13','מטרו 13'],['l1','מטרו 1']], dirs:[['מהאצטדיון לפארק בתח״צ','Stade de France Saint-Denis','Jardin d\'Acclimatation Paris','transit']], aik:'METRO'},
+  {t:'12:30–15:30', h:'🌳 פארק בולון + ז׳רדן ד׳אקלימטסיון', p:'פארק השעשועים הוותיק שבתוך היער (מתקנים ובעלי חיים, כניסה בתשלום), סירות משוטים על האגם, ושבילים מוצלים. שיא החום של היום — להיצמד לצל, למים ולמתקנים המקורים.', chips:[['tix','כניסה/מתקנים בתשלום'],['free','היער עצמו חינם']], m:'Jardin d\'Acclimatation Bois de Boulogne Paris'},
+  {t:'15:45', h:'חזרה הביתה', p:'מטרו 1 מ־Les Sablons עד Concorde + 10 דק׳ הליכה, או עד Champs-Élysées והחלפה ל־13 לסן־לזאר.', chips:[['l1','מטרו 1']], m:HOME, aik:'METRO'},
+  {t:'16:45–17:45', h:'🛒 קניות לשבת', p:'Monoprix ב־47 Boulevard Malesherbes, 6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי.', chips:[['walk','ברגל']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
+  {t:'18:00–19:30', h:'מנוחה וארגון האוכל', p:'', chips:[], rest:true, aik:'REST'},
   {t:'19:45', h:'ארוחת ערב והכנות אחרונות', p:'', chips:[], rest:true, aik:'REST'},
   {t:'~21:10', h:'🕯️ הדלקת נרות וכניסת שבת', p:'לבדוק את זמן ההדלקה המדויק לפריז (סביב 21:10). שבת שלום!', chips:[['free','שבת שלום']], aik:'REST'}
  ]
