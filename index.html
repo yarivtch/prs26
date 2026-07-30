@@ -946,16 +946,17 @@ const DAYS = [
 },
 {
  id:'d4', date:'2026-07-31', short:'ו׳', label:'ו׳ 31.7', temp:33,
- title:'בוקר לבחירה וקניות לשבת',
- note:'מסיימים את כל הקניות עד הצהריים.',
+ title:'סטאד דה פראנס בבוקר וקניות לשבת',
+ fix:'הכרטיסים לאצטדיון ל־10:00 — לכן קניות השבת זזות לשעת הפתיחה של המונופרי, לפני היציאה. לא לדחות אותן לאחרי!',
+ note:'סדר הבוקר צפוף אבל עובד: סופר בפתיחה ← מטרו 13 לאצטדיון ← סיור 10:00 ← גרולה בדרך חזרה.',
  stops:[
   {t:'07:45', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
-  {t:'08:30–11:00', key:'d4morn', h:'בוקר שישי — מה עושים?', choice:[
-    {h:'בוקר רגוע בטווילרי', p:'הליכה מוקדמת לגנים לפני החום, קרוסלה וסירות מפרש קטנות בבריכה לילדים, וחזרה בנחת.', chips:[['walk','10–12 דק׳'],['free','חינם']], m:'Jardin des Tuileries Paris', dir:true},
-    {h:'גלרי לפאייט + גג התצפית', p:'נפתחת סביב 10:00 — מתאים אם לא הלכתם בחמישי. 8 דק׳ מהדירה, וחוזרים ישר לסופר.', chips:[['walk','8 דק׳'],['free','כניסה וגג חינם']], m:'Galeries Lafayette Haussmann Paris', dir:true}
-  ]},
-  {t:'11:00–12:15', h:'קניות לשבת — לא לדחות!', p:'Monoprix גדול ב־47 Boulevard Malesherbes, ~6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי.', chips:[['walk','ברגל']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
-  {t:'12:15 ואילך', h:'ארגון האוכל ומנוחה לקראת שבת', p:'', chips:[], rest:true, aik:'REST'}
+  {t:'08:30–09:05', h:'קניות לשבת — בפתיחת המונופרי', p:'Monoprix ב־47 Boulevard Malesherbes, ~6 דק׳ מהדירה. מים, פירות, ירקות, גבינות, לחם, יוגורטים, חטיפים, שתייה, חד־פעמי. מפצלים: אחד מקפיץ את השקיות הביתה, השאר יוצאים לכיוון סן־לזאר.', chips:[['walk','ברגל'],['tix','לוודא שעת פתיחה']], m:'Monoprix 47 Boulevard Malesherbes Paris', dir:true, aik:'SHOP'},
+  {t:'09:10', h:'מטרו 13 לאצטדיון', p:'מסן־לזאר (6 דק׳ הליכה) לכיוון Saint-Denis-Université — לא Asnières! יורדים ב־Saint-Denis – Porte de Paris, ~10 דק׳ ברגל. הגעה ~09:50.', chips:[['l13','מטרו 13'],['tix','€2.55']], m:'Gare Saint-Lazare Paris', dir:true, aik:'METRO'},
+  {t:'10:00–11:30', h:'🏟️ סיור סטאד דה פראנס', p:'יציעים, חדרי הלבשה ומנהרת השחקנים — איפה שצרפת לקחה את המונדיאל ב־98.', chips:[['have','כרטיסים קיימים']], m:'Stade de France Saint-Denis'},
+  {t:'11:45', h:'חזרה למרכז', p:'מטרו 13 חזרה לסן־לזאר.', chips:[['l13','מטרו 13']], aik:'METRO'},
+  {t:'12:30–13:00', h:'🍋 Cédric Grolet Opéra', p:'הקונדיטוריה של פירות האשליה — 8 דק׳ הליכה מסן־לזאר, בדרך הביתה. ייתכן תור.', chips:[['walk','ברגל'],['tix','ייתכן תור']], m:'Cédric Grolet Opéra Paris', dir:true},
+  {t:'13:15 ואילך', h:'ארגון האוכל ומנוחה לקראת שבת', p:'', chips:[], rest:true, aik:'REST'}
  ]
 },
 {
@@ -994,14 +995,12 @@ const DAYS = [
 },
 {
  id:'d7', date:'2026-08-03', short:'ב׳', label:'ב׳ 3.8', temp:30,
- title:'אצטדיון, אייפל ומונמרט — יום הבחירות הגדול',
+ title:'אייפל ומונמרט — יום הבחירות הגדול',
  note:'היום הקריר ביותר, אבל עם סיכוי לסופות — כל בחירה כאן צריכה בדיקת תחזית בבוקר. בערב אורזים אריזה ראשונה.',
  fix:'עלייה לאייפל: להזמין מראש באתר הרשמי — הפסגה נמכרת ימים קדימה. בסופת ברקים הפסגה נסגרת; אם התחזית גרועה, המוזיאון הוא הבחירה.',
  stops:[
   {t:'08:00', h:'קפה ומאפה ליד הדירה', p:'', chips:[['walk','ברגל']], aik:'CAFE'},
-  {t:'08:40', h:'מטרו 13 צפונה לאצטדיון', p:'מסן־לזאר לכיוון Saint-Denis-Université (לא Asnières!), יורדים ב־Saint-Denis – Porte de Paris, ~10 דק׳ ברגל.', chips:[['l13','מטרו 13'],['tix','€2.55']], m:'Gare Saint-Lazare Paris', dir:true},
-  {t:'09:30–11:00', h:'סיור באצטדיון הלאומי', p:'יציעים, חדרי הלבשה, מנהרת שחקנים. חובה להזמין מראש.', chips:[['book','להזמין מראש']], m:'Stade de France Saint-Denis'},
-  {t:'11:15–12:00', h:'חזרה למרכז', p:'מטרו 13 לסן־לזאר.', chips:[['l13','מטרו 13']], aik:'METRO'},
+  {t:'09:00–12:00', h:'בוקר חופשי רגוע', p:'סיור האצטדיון הוקדם לשישי — הבוקר פתוח: פארק מונסו המוצל (10 דק׳), הטווילרי, או קניות אחרונות ליד הדירה.', chips:[['walk','ברגל'],['free','חינם']], m:'Parc Monceau Paris', dir:true},
   {t:'12:00–13:30', h:'צהריים ומנוחה ליד הבית', p:'', chips:[], rest:true, aik:'REST'},
   {t:'14:00–17:00', key:'d7aft', h:'אחר הצהריים — הבחירה הגדולה', choice:[
     {h:'עלייה למגדל אייפל', p:'לפי שעת הכרטיס שהזמנתם. מטרו 8 מ־Madeleine ל־École Militaire. קומה 2 מספיקה לילדים; פסגה אם הזמנתם ומזג האוויר מאפשר.', chips:[['l8','מטרו 8'],['book','חובה כרטיס מראש']], m:'Eiffel Tower Paris', dir:true},
@@ -1038,7 +1037,7 @@ const CHECKLIST = [
  {id:'docs',    h:'תיקיית מסמכים ב־Drive — להעלות ולשתף', p:'התיקייה קיימת ומקושרת באפליקציה. להעלות דרכונים+כרטיסים+ביטוח, לשתף עם המשפחה, ולסמן "זמין במצב לא מקוון" בכל טלפון.', badge:'buy', btxt:'היום', url:'https://drive.google.com/drive/folders/1j8_bdjBuxLwMTWlbwlRLEPDRkpplpnXB?usp=drive_link'},
  {id:'versailles', h:'ורסאי — ראשון 2.8 ב־13:30 (הגעה 13:00)', p:'גישה מלאה לארמון ולגנים. לבדוק אם ה־Grandes Eaux כלולות, וכרטיסי־חינם לילדים.', badge:'have', btxt:'כבר קיים', m:'Château de Versailles', url:'https://en.chateauversailles.fr'},
  {id:'eiffel',  h:'מגדל אייפל — שני 3.8 אחה״צ', p:'להזמין עכשיו באתר הרשמי בלבד — נמכר ימים קדימה. קומה 2 מספיקה; פסגה אם חשוב.', badge:'buy', btxt:'לקנות מיד', m:'Eiffel Tower Paris', url:'https://www.toureiffel.paris/en'},
- {id:'stade',   h:'סיור Stade de France — שני 3.8', p:'לבחור סיור בוקר (~09:30) באתר הרשמי.', badge:'buy', btxt:'לקנות עכשיו', m:'Stade de France Saint-Denis', url:'https://www.stadefrance.com/en/tour-pass'},
+ {id:'stade',   h:'סיור Stade de France — שישי 31.7 ב־10:00', p:'הכרטיסים קיימים. מטרו 13 מסן־לזאר, יציאה מהדירה עד 09:10.', badge:'have', btxt:'כבר קיים', m:'Stade de France Saint-Denis', url:'https://www.stadefrance.com/en/tour-pass'},
  {id:'museum',  h:'מוזיאון חמישי בבוקר — Paradox או גרווין', p:'לפי הבחירה בלו״ז. עדיפות לכרטיס עם ביטול. השני = גיבוי לשני אחה״צ.', badge:'buy', btxt:'אחרי שבוחרים', m:'Musée Grévin Paris', url:'https://www.grevin-paris.com/en'},
  {id:'cruise',  h:'שיט Vedettes du Pont Neuf — חמישי ~21:00', p:'שיט ערב אחרי הלובר, כדי לתפוס את נצנוץ האייפל ב־22:00 מהמים. להזמין מראש!', badge:'buy', btxt:'לקנות עכשיו', m:'Vedettes du Pont Neuf Paris', url:'https://www.vedettesdupontneuf.com'},
  {id:'arc',     h:'שער הניצחון — תצפית ערב חמישי', p:'אם עולים לגג: לבדוק שעת כניסה אחרונה ולהזמין. קטינים בד״כ חינם.', badge:'opt', btxt:'לפי החלטה', m:'Arc de Triomphe Paris', url:'https://www.paris-arc-de-triomphe.fr/en'},
